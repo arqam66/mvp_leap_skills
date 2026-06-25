@@ -1,0 +1,6 @@
+{
+  "name": "Leap Skills",
+  "description": "An all-in-one creator storefront platform to monetize expertise with mentorship sessions, digital goods, and direct payouts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
