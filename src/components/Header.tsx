@@ -35,6 +35,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-5 h-full flex items-center justify-between">
         {/* Logo */}
         <button
+          type="button"
           onClick={() => router.push('/')}
           className="flex items-center gap-2.5 focus:outline-none cursor-pointer shrink-0"
         >
@@ -49,6 +50,7 @@ export default function Header() {
         <nav className="hidden lg:flex items-center gap-1">
           {navLinks.map((link) => (
             <button
+              type="button"
               key={link.href}
               onClick={() => router.push(link.href)}
               className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all focus:outline-none cursor-pointer ${
@@ -68,6 +70,7 @@ export default function Header() {
         {/* Right Side */}
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={() => router.push('/signup')}
             className="text-sm font-semibold text-[#5f5e5e] hover:text-[#1a1c1c] px-4 py-2 rounded-lg hover:bg-gray-50 transition-all focus:outline-none cursor-pointer"
           >
@@ -76,6 +79,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
+            type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
             className="lg:hidden p-2 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none cursor-pointer ml-1"
             aria-label="Toggle menu"
@@ -97,6 +101,7 @@ export default function Header() {
           <nav className="max-w-7xl mx-auto px-5 py-4 flex flex-col gap-1">
             {navLinks.map((link) => (
               <button
+                type="button"
                 key={link.href}
                 onClick={() => {
                   router.push(link.href);
@@ -112,6 +117,7 @@ export default function Header() {
               </button>
             ))}
             <button
+              type="button"
               onClick={() => {
                 router.push('/signup');
                 setMobileOpen(false);

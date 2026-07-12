@@ -19,6 +19,7 @@ export default function SignUpPage() {
       <div className="w-full max-w-md">
         {/* Back to home */}
         <button
+          type="button"
           onClick={() => router.push('/')}
           className="flex items-center gap-2 text-sm text-[#5f5e5e] hover:text-[#1a1c1c] mb-8 transition-colors focus:outline-none cursor-pointer"
         >
@@ -130,6 +131,7 @@ export default function SignUpPage() {
           <p className="text-center text-sm text-[#5f5e5e] mt-6">
             {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
             <button
+              type="button"
               onClick={() => setIsSignUp(!isSignUp)}
               className="text-primary-brand font-semibold hover:underline focus:outline-none cursor-pointer"
             >

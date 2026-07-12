@@ -40,12 +40,14 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
+              type="button"
               onClick={() => router.push('/dashboard')}
               className="w-full sm:w-auto px-10 py-4.5 bg-primary-container hover:bg-primary-brand text-white font-bold text-sm rounded-xl shadow-xl shadow-primary-container/20 hover:-translate-y-0.5 transition-all active:translate-y-0 cursor-pointer"
             >
               Start My Page &mdash; It&apos;s Free
             </button>
             <button
+              type="button"
               onClick={() => featuresRef.current?.scrollIntoView({ behavior: 'smooth' })}
               className="w-full sm:w-auto px-10 py-4.5 bg-white border border-gray-200 hover:border-gray-300 text-gray-700 font-bold text-sm rounded-xl shadow-sm hover:bg-gray-50 transition-all cursor-pointer"
             >
@@ -77,10 +79,10 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="flex gap-3">
-              <button onClick={scrollLeft} className="w-11 h-11 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 active:scale-95 transition-all cursor-pointer">
+              <button type="button" onClick={scrollLeft} className="w-11 h-11 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 active:scale-95 transition-all cursor-pointer">
                 <span className="material-symbols-outlined font-semibold">chevron_left</span>
               </button>
-              <button onClick={scrollRight} className="w-11 h-11 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 active:scale-95 transition-all cursor-pointer">
+              <button type="button" onClick={scrollRight} className="w-11 h-11 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 active:scale-95 transition-all cursor-pointer">
                 <span className="material-symbols-outlined font-semibold">chevron_right</span>
               </button>
             </div>
@@ -110,6 +112,7 @@ export default function LandingPage() {
                     <p className="text-primary-container font-semibold text-xs uppercase tracking-wider mb-0.5">{creator.title}</p>
                     <p className="text-gray-400 text-xs mb-5">{creator.org}</p>
                     <button
+                      type="button"
                       onClick={(e) => { e.stopPropagation(); handleCreatorClick(creator); }}
                       className="w-full py-2.5 border border-indigo-100 hover:border-primary-brand hover:bg-primary-brand hover:text-white text-primary-brand text-xs font-bold rounded-lg transition-all"
                     >
@@ -225,6 +228,7 @@ export default function LandingPage() {
               <h2 className="font-headline text-3xl md:text-4.53xl font-bold mb-4 tracking-tight leading-tight">The future of creator economy is professional. Are you?</h2>
               <p className="text-indigo-100 text-sm md:text-base mb-8">Start your premium storefront today. Fully free to set up, only pay a small commission on successful bookings.</p>
               <button
+                type="button"
                 onClick={() => router.push('/dashboard')}
                 className="bg-white text-primary-brand font-bold px-10 py-4 rounded-xl hover:shadow-2xl hover:scale-105 active:scale-98 transition-all cursor-pointer"
               >
