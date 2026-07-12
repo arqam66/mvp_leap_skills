@@ -89,24 +89,11 @@ export default function Footer() {
             </nav>
           </div>
 
-          {/* Categories Column */}
-          <div>
-            <h4 className="font-headline text-sm font-semibold text-[#1a1c1c] mb-6">Categories</h4>
-            <nav className="flex flex-col gap-4 text-sm text-[#5f5e5e]">
-              <button onClick={() => router.push('/explore')} className="hover:text-primary-brand transition-colors text-left focus:outline-none cursor-pointer">Product Design</button>
-              <button onClick={() => router.push('/explore')} className="hover:text-primary-brand transition-colors text-left focus:outline-none cursor-pointer">Technology &amp; AI</button>
-              <button onClick={() => router.push('/explore')} className="hover:text-primary-brand transition-colors text-left focus:outline-none cursor-pointer">Business Strategy</button>
-              <button onClick={() => router.push('/explore')} className="hover:text-primary-brand transition-colors text-left focus:outline-none cursor-pointer">Growth Marketing</button>
-            </nav>
-          </div>
-
           {/* Platform Column */}
           <div>
             <h4 className="font-headline text-sm font-semibold text-[#1a1c1c] mb-6">Platform</h4>
             <nav className="flex flex-col gap-4 text-sm text-[#5f5e5e]">
               <button onClick={() => router.push('/explore')} className="hover:text-primary-brand transition-colors text-left focus:outline-none cursor-pointer">Explore Mentors</button>
-              <button onClick={() => router.push('/dashboard')} className="hover:text-primary-brand transition-colors text-left focus:outline-none cursor-pointer">Creator Dashboard</button>
-              <button onClick={() => router.push('/')} className="hover:text-primary-brand transition-colors text-left focus:outline-none cursor-pointer">Join Waitlist</button>
             </nav>
           </div>
 

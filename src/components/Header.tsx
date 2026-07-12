@@ -67,15 +67,6 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => router.push('/dashboard')}
-            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-primary-brand bg-primary-brand/5 border border-primary-brand/10 hover:bg-primary-brand/10 px-4 py-2 rounded-xl transition-all mr-2 focus:outline-none"
-            id="nav-cc"
-          >
-            <span className="material-symbols-outlined text-[16px] font-bold">dashboard</span>
-            Creator Dashboard
-          </button>
-
-          <button
             onClick={() => router.push('/explore')}
             className="text-sm font-semibold text-[#5f5e5e] hover:text-[#1a1c1c] px-4 py-2.5 rounded-xl transition-all focus:outline-none cursor-pointer"
           >
