@@ -26,24 +26,19 @@ export default function Header() {
           : 'h-[80px] bg-white/70 backdrop-blur-xl border-gray-100/50'
       }`}
     >
-      <div className="flex justify-between items-center w-full px-4 md:px-10 max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center w-full">
         <div className="flex items-center gap-12">
           <button
             onClick={() => router.push('/')}
-            className="flex items-center gap-3 group cursor-pointer text-left focus:outline-none"
-            id="nav-logo"
+            className="focus:outline-none cursor-pointer flex items-center gap-2"
           >
-            <img
-              alt="Leap Skills Logo"
-              className="h-10 w-auto object-contain transition-transform group-hover:scale-105"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGmOWQ2KyxXrzAzOweN_nQl71EHn0Zf3GVoOLOv9KAJWg7jz0OenkRpIv2QYfvqvLxsNLKy7a7IxY-1yUctTCjc4uaeaYrQjocRKXqMw7fqv8y1P_UZ06ALbHb2AF24vFIhkoTYLsU0_-sXBOeBydDqKz5joldm0L9t_X9zOWePMHuRsF7UsjBtIvF6NQIWhEvk0cgzbOSLPrqoE31znhALbmQZ1VLziVjFq9LSbHI_bHVPtfV5eIe1iA_wkr-DrVsFae7qHlvcL-4"
-            />
-            <span className="text-xl md:text-2xl font-headline font-extrabold tracking-tight text-primary-container">
-              Leap Skills
-            </span>
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="28" height="28" rx="8" fill="#6C63FF" />
+              <path d="M8 10h12M8 14h8M8 18h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <span className="font-sans font-bold text-base text-[#1a1c1c]">LeapSkills</span>
           </button>
-
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-6">
             <button
               onClick={() => router.push('/')}
               className={`font-sans font-semibold text-sm relative py-1 focus:outline-none cursor-pointer transition-colors ${

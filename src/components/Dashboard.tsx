@@ -5,12 +5,15 @@ import { useRouter } from 'next/navigation';
 import { useAppStore } from '../store/app';
 import { Service, Booking } from '../types';
 import { getFutureDate } from '../utils/dates';
+import { useShallow } from 'zustand/shallow';
+
+const EMPTY_SERVICES: Service[] = [];
 
 export default function Dashboard() {
   const router = useRouter();
   const selectedCreator = useAppStore((s) => s.selectedCreator);
-  const creatorServices = useAppStore((s) => s.servicesMap[s.selectedCreator.id] || []);
-  const bookings = useAppStore((s) => s.bookings.filter((b) => b.creatorId === s.selectedCreator.id));
+  const creatorServices = useAppStore((s) => s.servicesMap[s.selectedCreator.id] ?? EMPTY_SERVICES);
+  const bookings = useAppStore(useShallow((s) => s.bookings.filter((b) => b.creatorId === s.selectedCreator.id)));
   const addService = useAppStore((s) => s.addService);
   const addBooking = useAppStore((s) => s.addBooking);
   const cancelBooking = useAppStore((s) => s.cancelBooking);
