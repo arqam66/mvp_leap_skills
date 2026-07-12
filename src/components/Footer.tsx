@@ -1,10 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
-  const router = useRouter();
   const pathname = usePathname();
 
   if (pathname === '/dashboard') return null;
@@ -12,20 +11,12 @@ export default function Footer() {
   return (
     <footer className="w-full py-16 bg-[#ffffff] border-t border-gray-100 mt-20">
       <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
           {/* Brand Column */}
-          <div className="md:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-6 group">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="28" height="28" rx="8" fill="#6C63FF" />
-                <path d="M8 10h12M8 14h8M8 18h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-              <span className="font-headline text-lg font-extrabold tracking-tight text-primary-brand">Leap Skills</span>
-            </Link>
+          <div>
             <p className="text-[#5f5e5e] text-sm max-w-xs mb-8 leading-relaxed">
               Bridging the gap between learning and your career with practical projects, mentorship, and real partner networks.
             </p>
-            {/* Social Media Icons */}
             <div className="flex gap-4">
               <a
                 href="https://www.instagram.com/leap_skillss/?igsh=MndlaHl6NDFzZ3Rt#"
@@ -74,24 +65,12 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Monetize Column */}
-          <div>
-            <h4 className="font-headline text-sm font-semibold text-[#1a1c1c] mb-6">Monetize</h4>
-            <nav className="flex flex-col gap-4 text-sm text-[#5f5e5e]">
-              <Link href="/explore" className="hover:text-primary-brand transition-colors text-left">1:1 Sessions</Link>
-              <Link href="/explore" className="hover:text-primary-brand transition-colors text-left">Webinars &amp; Events</Link>
-              <Link href="/explore" className="hover:text-primary-brand transition-colors text-left">Cohort Courses</Link>
-              <Link href="/explore" className="hover:text-primary-brand transition-colors text-left">Digital Goods</Link>
-            </nav>
-          </div>
-
           {/* Platform Column */}
           <div>
             <h4 className="font-headline text-sm font-semibold text-[#1a1c1c] mb-6">Platform</h4>
             <nav className="flex flex-col gap-4 text-sm text-[#5f5e5e]">
               <Link href="/explore" className="hover:text-primary-brand transition-colors text-left">Explore Mentors</Link>
-              <Link href="/privacy" className="hover:text-primary-brand transition-colors text-left">Privacy Policy</Link>
-              <Link href="/terms" className="hover:text-primary-brand transition-colors text-left">Terms &amp; Conditions</Link>
+              <Link href="/signup" className="hover:text-primary-brand transition-colors text-left">Sign Up</Link>
             </nav>
           </div>
 

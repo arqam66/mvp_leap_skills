@@ -3,11 +3,7 @@
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
-interface HeaderProps {
-  onOpenAuth?: () => void;
-}
-
-export default function Header({ onOpenAuth }: HeaderProps) {
+export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const [scrolled, setScrolled] = React.useState(false);
@@ -19,15 +15,13 @@ export default function Header({ onOpenAuth }: HeaderProps) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (pathname === '/dashboard') return null;
+  if (pathname === '/dashboard' || pathname === '/signup') return null;
 
   const isActive = (p: string) => pathname === p;
 
   const navLinks = [
     { label: 'Home', href: '/' },
     { label: 'Explore', href: '/explore' },
-    { label: 'Privacy', href: '/privacy' },
-    { label: 'Terms', href: '/terms' },
   ];
 
   return (
@@ -74,16 +68,10 @@ export default function Header({ onOpenAuth }: HeaderProps) {
         {/* Right Side */}
         <div className="flex items-center gap-2">
           <button
-            onClick={onOpenAuth}
+            onClick={() => router.push('/signup')}
             className="text-sm font-semibold text-[#5f5e5e] hover:text-[#1a1c1c] px-4 py-2 rounded-lg hover:bg-gray-50 transition-all focus:outline-none cursor-pointer"
           >
             Sign In
-          </button>
-          <button
-            onClick={onOpenAuth}
-            className="text-sm font-bold bg-primary-container text-white px-5 py-2.5 rounded-xl hover:bg-primary-brand hover:shadow-lg hover:shadow-primary-container/20 active:scale-95 transition-all focus:outline-none cursor-pointer"
-          >
-            Get Started
           </button>
 
           {/* Mobile Menu Button */}
@@ -123,6 +111,15 @@ export default function Header({ onOpenAuth }: HeaderProps) {
                 {link.label}
               </button>
             ))}
+            <button
+              onClick={() => {
+                router.push('/signup');
+                setMobileOpen(false);
+              }}
+              className="text-left px-4 py-3 rounded-lg text-sm font-medium text-[#5f5e5e] hover:text-[#1a1c1c] hover:bg-gray-50 transition-colors focus:outline-none cursor-pointer"
+            >
+              Sign In
+            </button>
           </nav>
         </div>
       )}
