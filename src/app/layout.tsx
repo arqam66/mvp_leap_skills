@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           });
         }
       `}} />
-      <body className="bg-[#f9f9f9] text-[#1a1c1c] antialiased font-sans min-h-screen flex flex-col">
+      <body className="bg-black text-white antialiased font-sans min-h-screen flex flex-col">
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
