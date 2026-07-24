@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -10,6 +13,34 @@
   --color-accent-coral: #e11d48;
   --color-surface-subtle: #f8fafc;
   --animate-fade-in: fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --color-background: var(--bg-color);
+  --color-foreground: var(--fg-color);
+  --color-muted: var(--muted-color);
+  --color-muted-foreground: var(--muted-fg-color);
+  --color-primary: var(--primary-color);
+}
+
+:root {
+  --radius: 0.5rem;
+  --bg-color: #ffffff;
+  --fg-color: #0f172a;
+  --muted-color: #f1f5f9;
+  --muted-fg-color: #64748b;
+  --primary-color: #3525cd;
+}
+
+.dark {
+  --sidebar-ring: oklch(0.439 0 0);
+  --bg-color: #0f172a;
+  --fg-color: #f8fafc;
+  --muted-color: #1e293b;
+  --muted-fg-color: #94a3b8;
+  --primary-color: #6366f1;
+}
+
+.retro {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  letter-spacing: 0.05em;
 }
 
 @keyframes fade-in {
@@ -44,5 +75,3 @@
     direction: ltr;
   }
 }
-
-

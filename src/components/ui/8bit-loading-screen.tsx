@@ -1,8 +1,9 @@
-// src/components/ui/8bit-loading-screen.tsx
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { cn } from "@/lib/utils";
+
 import { Progress } from "@/components/ui/8bit-progress";
 
 const DEFAULT_TIPS = [
@@ -90,13 +91,22 @@ export default function LoadingScreen({
 
   const content = (
     <div className="flex flex-col items-center justify-center gap-6 p-8">
-      <h2 className={cn("retro text-xl md:text-2xl text-center", "animate-pulse")}>
+      {/* Title */}
+      <h2
+        className={cn(
+          "retro text-xl md:text-2xl text-center font-bold tracking-widest",
+          "animate-pulse text-slate-900 dark:text-white"
+        )}
+      >
         {title}
+        {showCursor && <span className="inline-block ml-1">_</span>}
       </h2>
+
+      {/* Progress section */}
       <div className="w-full max-w-md space-y-2">
         {showPercentage && (
           <div className="flex justify-end">
-            <span className="retro text-xs text-muted-foreground">
+            <span className="retro text-xs text-slate-500 dark:text-slate-400 font-mono">
               {Math.round(displayProgress)}%
             </span>
           </div>
@@ -104,13 +114,15 @@ export default function LoadingScreen({
         <Progress
           value={displayProgress}
           variant="retro"
-          progressBg="bg-primary"
-          className="h-4"
+          progressBg="bg-indigo-600 dark:bg-indigo-500"
+          className="h-4 border-2 border-slate-900 dark:border-slate-100 p-0.5 rounded-none bg-slate-200 dark:bg-slate-800"
         />
       </div>
+
+      {/* Tips section */}
       {tips.length > 0 && (
         <div className="w-full max-w-md min-h-16 flex items-center justify-center">
-          <p className="retro text-[0.625rem] md:text-xs text-center text-muted-foreground leading-relaxed animate-pulse">
+          <p className="retro text-[0.625rem] md:text-xs text-center text-slate-600 dark:text-slate-400 leading-relaxed animate-pulse">
             {tips[currentTipIndex]}
           </p>
         </div>
@@ -123,7 +135,7 @@ export default function LoadingScreen({
       <div
         className={cn(
           "fixed inset-0 z-50 flex items-center justify-center",
-          "bg-background",
+          "bg-white dark:bg-slate-950 text-slate-900 dark:text-white",
           className
         )}
         {...props}
