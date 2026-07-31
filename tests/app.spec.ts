@@ -4,7 +4,7 @@ test.describe('LeapSkills App', () => {
   test('homepage loads correctly', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(/Leap Skills/);
-    await expect(page.locator('text=Your All-in-One')).toBeVisible();
+    await expect(page.locator('text=Monetize your expertise')).toBeVisible();
   });
 
   test('navbar has correct links', async ({ page }) => {
@@ -35,7 +35,7 @@ test.describe('LeapSkills App', () => {
 
   test('Sign In navigates to signup page', async ({ page }) => {
     await page.goto('/');
-    await page.locator('header button:has-text("Sign In")').click();
+    await page.locator('header button:has-text("Sign Up")').click();
     await expect(page).toHaveURL(/\/signup/);
     await expect(page.locator('text=Create your account')).toBeVisible();
   });
