@@ -11,7 +11,7 @@ export default function Footer() {
   return (
     <footer className="w-full py-12 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-200">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           {/* Brand Info */}
           <div>
             <div className="flex items-center gap-2.5 mb-4">
@@ -22,20 +22,9 @@ export default function Footer() {
               </div>
               <span className="font-headline font-bold text-lg text-slate-900 dark:text-white">Leap Skills</span>
             </div>
-            <p className="text-slate-600 dark:text-slate-400 text-xs md:text-sm max-w-xs mb-4 leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-400 text-xs md:text-sm max-w-xs mb-6 leading-relaxed">
               Professional storefront platform for independent technical experts, advisors, and mentors worldwide.
             </p>
-            <div className="mb-6">
-              <a
-                href="mailto:info@leapskills.sbs"
-                className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1.5"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                info@leapskills.sbs
-              </a>
-            </div>
             <div className="flex gap-3">
               <a
                 href="https://www.instagram.com/leap_skillss/?igsh=MndlaHl6NDFzZ3Rt#"
@@ -66,8 +55,20 @@ export default function Footer() {
           <div>
             <h4 className="font-headline text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4">Platform</h4>
             <nav className="flex flex-col gap-2.5 text-xs md:text-sm text-slate-600 dark:text-slate-400">
+              <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Home</Link>
               <Link href="/explore" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Explore Mentors</Link>
+              <Link href="/dashboard" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Dashboard</Link>
               <Link href="/signup" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Sign Up Page</Link>
+            </nav>
+          </div>
+
+          {/* Support / Company Links */}
+          <div>
+            <h4 className="font-headline text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4">Support</h4>
+            <nav className="flex flex-col gap-2.5 text-xs md:text-sm text-slate-600 dark:text-slate-400">
+              <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">About Us</Link>
+              <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Contact Support</Link>
+              <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">FAQs &amp; Help</Link>
             </nav>
           </div>
 
