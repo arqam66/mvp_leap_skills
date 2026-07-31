@@ -83,17 +83,6 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pt-[104px] pb-20 px-6">
       <div className="max-w-xl mx-auto space-y-8">
-        {/* Breadcrumb */}
-        <button
-          onClick={() => router.push('/')}
-          className="flex items-center gap-2 text-sm text-[#5f5e5e] dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
-          Back to Home
-        </button>
-
         <div className="space-y-3 text-center md:text-left">
           <h1 className="font-headline text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">
             Contact Support

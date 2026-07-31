@@ -86,7 +86,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row">
       <aside className="w-full md:w-64 bg-[#1a1c1c] text-slate-100 flex flex-col justify-between shrink-0 select-none md:h-screen md:sticky md:top-0">
         <div>
           <div className="p-6 border-b border-gray-800 flex items-center justify-between">
