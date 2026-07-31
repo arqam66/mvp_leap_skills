@@ -202,7 +202,7 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
                   <div key={service.id} className="p-5 bg-gray-50/50 dark:bg-slate-800/60 border border-gray-200/50 dark:border-slate-700/60 hover:border-indigo-100 dark:hover:border-indigo-500/50 hover:bg-white dark:hover:bg-slate-800 rounded-2xl transition-all shadow-sm space-y-4">
                     <div className="flex justify-between items-start gap-2">
                       <h3 className="text-xs md:text-sm font-bold text-[#1a1c1c] dark:text-white leading-tight">{service.title}</h3>
-                      <span className="font-headline text-sm font-black text-primary-brand dark:text-indigo-400 shrink-0">${service.price}</span>
+                      <span className="font-headline text-sm font-black text-primary-brand dark:text-indigo-400 shrink-0">PKR {service.price.toLocaleString()}</span>
                     </div>
                     <p className="text-gray-500 dark:text-slate-300 text-xs leading-relaxed line-clamp-3">{service.description}</p>
                     <div className="flex flex-wrap gap-2 text-[10px] text-gray-400 dark:text-slate-400 font-semibold select-none">
@@ -255,7 +255,7 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
               </button>
               <span className="text-[10px] font-bold tracking-widest text-indigo-200 uppercase block mb-1">Storefront Checkout</span>
               <h3 className="font-headline text-lg font-bold truncate leading-tight pr-10">{selectedService.title}</h3>
-              <p className="text-white font-extrabold text-sm mt-1">Amount Due: <span className="text-indigo-200 font-extrabold">${selectedService.price}</span></p>
+              <p className="text-white font-extrabold text-sm mt-1">Amount Due: <span className="text-indigo-200 font-extrabold">PKR {selectedService.price.toLocaleString()}</span></p>
             </div>
 
             {!selectedService.isDownloadable && checkoutStep !== 3 && (

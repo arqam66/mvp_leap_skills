@@ -310,7 +310,7 @@ export default function Dashboard() {
                   <div>
                     <div className="flex justify-between items-start gap-3">
                       <h4 className="text-sm font-bold text-gray-800 dark:text-white leading-tight">{service.title}</h4>
-                      <span className="font-headline text-sm font-black text-primary-brand dark:text-indigo-400">${service.price}</span>
+                      <span className="font-headline text-sm font-black text-primary-brand dark:text-indigo-400">PKR {service.price.toLocaleString()}</span>
                     </div>
                     <p className="text-gray-500 dark:text-slate-300 text-xs leading-relaxed pt-2.5">{service.description}</p>
                   </div>

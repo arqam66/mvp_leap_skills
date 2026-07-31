@@ -93,7 +93,7 @@ export default function LandingPage() {
                     <div className="text-xs font-bold text-white">1:1 Strategy Consultation</div>
                     <div className="text-[11px] text-slate-400">45 min video session</div>
                   </div>
-                  <div className="text-xs font-semibold text-emerald-400">$150</div>
+                  <div className="text-xs font-semibold text-emerald-400">PKR 1,000</div>
                 </div>
 
                 <div className="bg-slate-800/80 p-3.5 rounded border border-slate-700/60 flex justify-between items-center">
@@ -101,7 +101,7 @@ export default function LandingPage() {
                     <div className="text-xs font-bold text-white">AI Architecture Toolkit</div>
                     <div className="text-[11px] text-slate-400">PDF + Code Repo access</div>
                   </div>
-                  <div className="text-xs font-semibold text-emerald-400">$49</div>
+                  <div className="text-xs font-semibold text-emerald-400">PKR 1,000</div>
                 </div>
               </div>
 
@@ -177,7 +177,7 @@ export default function LandingPage() {
                     <p className="text-xs text-slate-500 dark:text-slate-500 line-clamp-2 leading-relaxed mb-4">{creator.bio}</p>
                   </div>
                   <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-900 dark:text-white">From ${creator.startingPrice}</span>
+                    <span className="text-xs font-semibold text-slate-900 dark:text-white">From PKR {creator.startingPrice.toLocaleString()}</span>
                     <span className="text-xs font-bold text-indigo-600 group-hover:underline">View Services &rarr;</span>
                   </div>
                 </div>

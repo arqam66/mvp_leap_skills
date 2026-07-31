@@ -57,7 +57,6 @@ export default function Footer() {
             <nav className="flex flex-col gap-2.5 text-xs md:text-sm text-slate-600 dark:text-slate-400">
               <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Home</Link>
               <Link href="/explore" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Explore Mentors</Link>
-              <Link href="/dashboard" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Dashboard</Link>
               <Link href="/signup" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Sign Up Page</Link>
             </nav>
           </div>
@@ -66,9 +65,9 @@ export default function Footer() {
           <div>
             <h4 className="font-headline text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4">Support</h4>
             <nav className="flex flex-col gap-2.5 text-xs md:text-sm text-slate-600 dark:text-slate-400">
-              <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">About Us</Link>
-              <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Contact Support</Link>
-              <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">FAQs &amp; Help</Link>
+              <Link href="/about" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">About Us</Link>
+              <Link href="/contact" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Contact Support</Link>
+              <Link href="/faq" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">FAQs &amp; Help</Link>
             </nav>
           </div>
 

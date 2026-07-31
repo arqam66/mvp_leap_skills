@@ -30,9 +30,9 @@ export default function ExplorePage() {
       const matchCategory = selectedCategory === 'all' || creator.category === selectedCategory;
 
       let matchPrice = true;
-      if (selectedPriceLimit === 'under-100') matchPrice = creator.startingPrice < 100;
-      else if (selectedPriceLimit === '100-150') matchPrice = creator.startingPrice >= 100 && creator.startingPrice <= 150;
-      else if (selectedPriceLimit === 'above-150') matchPrice = creator.startingPrice > 150;
+      if (selectedPriceLimit === 'under-1000') matchPrice = creator.startingPrice < 1000;
+      else if (selectedPriceLimit === '1000-2000') matchPrice = creator.startingPrice >= 1000 && creator.startingPrice <= 2000;
+      else if (selectedPriceLimit === 'above-2000') matchPrice = creator.startingPrice > 2000;
 
       const matchVerified = !onlyVerified || creator.verified;
 
@@ -116,9 +116,9 @@ export default function ExplorePage() {
             <div className="flex flex-col gap-2">
               {[
                 { id: 'all', label: 'Any pricing' },
-                { id: 'under-100', label: 'Under $100/hr' },
-                { id: '100-150', label: '$100 - $150/hr' },
-                { id: 'above-150', label: 'Above $150/hr' },
+                { id: 'under-1000', label: 'Under PKR 1,000' },
+                { id: '1000-2000', label: 'PKR 1,000 – 2,000' },
+                { id: 'above-2000', label: 'Above PKR 2,000' },
               ].map((price) => (
                 <label key={price.id} className="flex items-center gap-2.5 text-sm font-semibold text-gray-600 dark:text-slate-300 hover:text-[#1a1c1c] dark:hover:text-white transition-all cursor-pointer py-1">
                   <input
@@ -274,7 +274,7 @@ export default function ExplorePage() {
                     <div className="px-5.5 pb-5.5 pt-3 border-t border-gray-50 dark:border-slate-800 flex items-center justify-between">
                       <div className="text-left select-none">
                         <span className="text-[10px] text-gray-400 dark:text-slate-500 font-bold uppercase tracking-wider block">Starts At</span>
-                        <span className="text-base font-extrabold text-[#1a1c1c] dark:text-white">${creator.startingPrice}</span>
+                        <span className="text-base font-extrabold text-[#1a1c1c] dark:text-white">PKR {creator.startingPrice.toLocaleString()}</span>
                         <span className="text-gray-400 dark:text-slate-500 text-xs font-semibold">/hr</span>
                       </div>
                       <span className="bg-primary-container/5 dark:bg-indigo-500/10 text-primary-container dark:text-indigo-400 font-extrabold text-xs px-4 py-2 rounded-xl group-hover:bg-primary-container dark:group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300">View Profile</span>

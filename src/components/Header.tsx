@@ -47,7 +47,9 @@ export default function Header() {
   const navLinks = [
     { label: 'Home', href: '/' },
     { label: 'Explore Mentors', href: '/explore' },
-    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'About Us', href: '/about' },
+    { label: 'Contact Support', href: '/contact' },
+    { label: 'FAQs & Help', href: '/faq' },
   ];
 
   return (
