@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "fix-security-vulnerabilities-with-strix": {
+      "source": "usestrix/strix",
+      "sourceType": "github",
+      "skillPath": "skills/fix-security-vulnerabilities-with-strix/SKILL.md",
+      "computedHash": "7f2f0c2409964b1613c91d487f896e5cb3956479193a725edde3a6d59e5a05a5"
+    }
+  }
+}

@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 export default function AboutPage() {
-  const router = useRouter();
+  const nav = useRouter();
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pt-[104px] pb-20 px-6">
@@ -75,7 +75,7 @@ export default function AboutPage() {
             </p>
           </div>
           <button
-            onClick={() => router.push('/signup')}
+            onClick={() => nav.push('/signup')}
             className="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-md transition-all shrink-0 cursor-pointer"
           >
             Create Your Account
