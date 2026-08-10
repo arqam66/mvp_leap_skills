@@ -1,7 +1,9 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 
 export default function AboutPage() {
+  const router = useRouter();
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pt-[104px] pb-20 px-6">
