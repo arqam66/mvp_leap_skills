@@ -1,6 +1,8 @@
 'use client';
 
 import React from 'react';
+import { createClient } from '../lib/supabase/client';
+import { useRouter } from 'next/navigation';
 
 interface AuthModalProps {
   open: boolean;
@@ -8,15 +10,73 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ open, onClose }: AuthModalProps) {
+  const router = useRouter();
   const [isSignUp, setIsSignUp] = React.useState(true);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [name, setName] = React.useState('');
+  const [role, setRole] = React.useState<'client' | 'trainer'>('client');
+  const [loading, setLoading] = React.useState(false);
+  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
 
   if (!open) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const supabase = createClient();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMsg(null);
+
+    try {
+      if (isSignUp) {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              full_name: name,
+              role,
+            },
+          },
+        });
+        if (error) throw error;
+
+        if (data.user) {
+          if (role === 'trainer') {
+            router.push('/onboarding/trainer');
+          } else {
+            router.push('/dashboard');
+          }
+          onClose();
+        }
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        if (data.user) {
+          router.push('/dashboard');
+          onClose();
+        }
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Authentication failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOAuth = async (provider: 'google' | 'github') => {
+    setErrorMsg(null);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) setErrorMsg(error.message);
   };
 
   return (
@@ -41,7 +101,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
         </button>
 
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <h2 className="font-headline text-2xl font-bold text-[#1a1c1c] dark:text-white mb-2">
             {isSignUp ? 'Create your account' : 'Welcome back'}
           </h2>
@@ -50,10 +110,45 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
           </p>
         </div>
 
+        {errorMsg && (
+          <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-300 text-xs rounded-lg">
+            {errorMsg}
+          </div>
+        )}
+
+        {/* Role Toggle for Signup */}
+        {isSignUp && (
+          <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mb-6">
+            <button
+              type="button"
+              onClick={() => setRole('client')}
+              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                role === 'client'
+                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              }`}
+            >
+              I want to Book Experts
+            </button>
+            <button
+              type="button"
+              onClick={() => setRole('trainer')}
+              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
+                role === 'trainer'
+                  ? 'bg-indigo-600 text-white shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              }`}
+            >
+              I am a Trainer / Creator
+            </button>
+          </div>
+        )}
+
         {/* Social Buttons */}
         <div className="space-y-3 mb-6">
           <button
             type="button"
+            onClick={() => handleOAuth('google')}
             className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-medium text-[#1a1c1c] dark:text-white hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600 transition-all focus:outline-none cursor-pointer"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -67,6 +162,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
 
           <button
             type="button"
+            onClick={() => handleOAuth('github')}
             className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-200 dark:border-slate-700 rounded-xl text-sm font-medium text-[#1a1c1c] dark:text-white hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-600 transition-all focus:outline-none cursor-pointer"
           >
             <svg className="w-5 h-5 fill-current text-slate-800 dark:text-slate-100" viewBox="0 0 24 24">
@@ -96,7 +192,8 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="John Doe"
-                className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-[#1a1c1c] dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-brand/20 focus:border-primary-brand dark:focus:border-indigo-400 transition-all"
+                required
+                className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-[#1a1c1c] dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-brand/20 focus:border-primary-brand dark:focus:border-indigo-400 transition-all rounded-xl"
               />
             </div>
           )}
@@ -111,7 +208,8 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-[#1a1c1c] dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-brand/20 focus:border-primary-brand dark:focus:border-indigo-400 transition-all"
+              required
+              className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-[#1a1c1c] dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-brand/20 focus:border-primary-brand dark:focus:border-indigo-400 transition-all rounded-xl"
             />
           </div>
 
@@ -125,15 +223,17 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Min. 8 characters"
-              className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-[#1a1c1c] dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-brand/20 focus:border-primary-brand dark:focus:border-indigo-400 transition-all"
+              required
+              className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-[#1a1c1c] dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-brand/20 focus:border-primary-brand dark:focus:border-indigo-400 transition-all rounded-xl"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-3 bg-primary-container dark:bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-primary-brand dark:hover:bg-indigo-500 hover:shadow-lg hover:shadow-primary-container/20 active:scale-[0.98] transition-all focus:outline-none cursor-pointer"
+            disabled={loading}
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-xl hover:shadow-lg transition-all focus:outline-none cursor-pointer disabled:opacity-50"
           >
-            {isSignUp ? 'Create Account' : 'Sign In'}
+            {loading ? 'Processing...' : isSignUp ? 'Create Account' : 'Sign In'}
           </button>
         </form>
 
@@ -142,7 +242,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
           {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
           <button
             onClick={() => setIsSignUp(!isSignUp)}
-            className="text-primary-brand dark:text-indigo-400 font-semibold hover:underline focus:outline-none cursor-pointer"
+            className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline focus:outline-none cursor-pointer"
           >
             {isSignUp ? 'Sign In' : 'Sign Up'}
           </button>

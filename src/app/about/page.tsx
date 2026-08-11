@@ -6,7 +6,7 @@ export default function AboutPage() {
   const nav = useRouter();
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pt-[104px] pb-20 px-6">
+    <div className="min-h-screen bg-[#fafafa] dark:bg-[#080c14] text-slate-900 dark:text-slate-100 pt-[104px] pb-20 px-6">
       <div className="max-w-4xl mx-auto space-y-12">
         {/* Hero Section */}
         <div className="space-y-4">
@@ -17,7 +17,7 @@ export default function AboutPage() {
             Empowering technical experts to guide the next generation.
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-sans max-w-3xl">
-            Leap Skills is the premium storefront and scheduling infrastructure built for independent technical advisors, principal engineers, and creators worldwide. We remove the intermediaries, so you can focus entirely on delivering high-impact knowledge.
+            Leap Skills is direct monetization infrastructure for principal engineers, security architects, and independent technical advisors. We remove commission-taking intermediaries and enforce direct Stripe Connect payouts from day one.
           </p>
         </div>
 
@@ -49,7 +49,7 @@ export default function AboutPage() {
               Global Accessibility
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
-              Supports localized time-zones matching, instant Google Calendar synchronization, and dynamic video call generation, enabling mentors across 180+ countries to schedule calls seamlessly.
+              Booking events directly trigger Google Calendar sync across any timezone. Auto-generated WebRTC room links are included with each session — no Zoom account required for either party.
             </p>
           </div>
 
@@ -59,13 +59,13 @@ export default function AboutPage() {
               Zero-friction UI
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
-              Designed with premium modern typography, high-contrast dark modes, and beautiful layouts that ensure your portfolio is represented with professional elegance.
+              No decorative layouts. High-contrast typography, intentional density hierarchy, and storefront profiles that surface your actual technical credibility instead of generic bios.
             </p>
           </div>
         </div>
 
         {/* Dynamic CTA Card */}
-        <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="p-8 rounded-lg bg-white dark:bg-[#0c101a] border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-1.5 max-w-xl">
             <h4 className="font-headline text-lg font-bold text-slate-900 dark:text-white">
               Ready to start your mentorship portal?
@@ -76,7 +76,7 @@ export default function AboutPage() {
           </div>
           <button
             onClick={() => nav.push('/login')}
-            className="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-md transition-all shrink-0 cursor-pointer"
+            className="px-5 py-3 bg-[#3525cd] hover:bg-[#2b1cb5] dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white font-bold text-xs rounded-md shadow-sm transition-all active:scale-[0.98] shrink-0 cursor-pointer"
           >
             Sign In &amp; Select Role
           </button>

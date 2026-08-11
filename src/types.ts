@@ -1,3 +1,8 @@
+export type ServiceFormat = 'one_on_one' | 'webinar' | 'cohort' | 'package' | 'paid_dm';
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed';
+export type PaymentStatus = 'unpaid' | 'paid' | 'refunded';
+export type UserRole = 'student' | 'instructor' | 'client' | 'trainer' | 'admin';
+
 export interface Creator {
   id: string;
   name: string;
@@ -14,6 +19,10 @@ export interface Creator {
   customMatchReason?: string;
   verified?: boolean;
   fastResponder?: boolean;
+  slug?: string;
+  instagramHandle?: string;
+  linkedinUrl?: string;
+  websiteUrl?: string;
 }
 
 export interface Service {
@@ -26,6 +35,42 @@ export interface Service {
   isDownloadable?: boolean;
   delivery?: string;
   type?: 'mentorship' | 'digital' | 'webinar' | 'cohort';
+  format?: ServiceFormat;
+  capacity?: number;
+  seatsBooked?: number;
+  isActive?: boolean;
+}
+
+export interface PackageItem {
+  id: string;
+  packageId: string;
+  itemType: 'service' | 'digital_product';
+  itemId: string;
+  quantity: number;
+  title?: string;
+}
+
+export interface PackageBundle {
+  id: string;
+  trainerId: string;
+  title: string;
+  description: string;
+  price: number;
+  status: 'draft' | 'published' | 'archived';
+  items?: PackageItem[];
+}
+
+export interface PaidDMThread {
+  id: string;
+  trainerId: string;
+  clientId: string;
+  clientName: string;
+  clientEmail: string;
+  question: string;
+  response?: string;
+  status: 'awaiting_response' | 'responded' | 'resolved';
+  openedAt: string;
+  respondedAt?: string;
 }
 
 export interface Booking {
@@ -35,10 +80,41 @@ export interface Booking {
   serviceTitle: string;
   clientName: string;
   clientEmail: string;
-  date: string; // e.g., "Oct 24" or "2026-06-25"
-  time: string; // e.g., "10:00 AM"
-  status: 'confirmed' | 'pending' | 'canceled';
+  date: string;
+  time: string;
+  status: BookingStatus;
+  paymentStatus?: PaymentStatus;
   platform?: string;
+  format?: ServiceFormat;
+  serviceId?: string;
+  packageId?: string;
+  dmThreadId?: string;
+  meetingId?: string;
+  roomId?: string;
+  notes?: string;
+}
+
+export interface DigitalProduct {
+  id: string;
+  trainerId: string;
+  title: string;
+  description: string;
+  thumbnail?: string;
+  fileUrl: string;
+  price: number;
+  status: 'draft' | 'published' | 'archived';
+  purchasesCount?: number;
+}
+
+export interface PayoutRecord {
+  id: string;
+  trainerId: string;
+  amount: number;
+  currency: string;
+  method: 'bank_transfer' | 'upi' | 'stripe_connect';
+  status: 'queued' | 'processing' | 'completed' | 'failed';
+  providerReference?: string;
+  createdAt: string;
 }
 
 export interface Testimonial {
@@ -48,9 +124,8 @@ export interface Testimonial {
   userRole: string;
   userImage: string;
   stars: number;
+  isPinned?: boolean;
 }
-
-export type UserRole = 'student' | 'instructor';
 
 export interface InstructorQuestionnaire {
   category: 'tech' | 'design' | 'business' | 'other';
@@ -84,4 +159,3 @@ export interface WebSocketBookingPayload {
   timestamp?: number;
   message?: string;
 }
-

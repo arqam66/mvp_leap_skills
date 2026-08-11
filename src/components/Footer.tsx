@@ -9,7 +9,7 @@ export default function Footer() {
   if (pathname === '/dashboard' || pathname === '/login') return null;
 
   return (
-    <footer className="w-full py-12 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-200">
+    <footer className="w-full py-12 bg-[#fafafa] dark:bg-[#080c14] border-t border-slate-200 dark:border-slate-800/80 text-slate-900 dark:text-slate-200">
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-12">
           {/* Brand Info */}
@@ -23,7 +23,7 @@ export default function Footer() {
               <span className="font-headline font-bold text-lg text-slate-900 dark:text-white">Leap Skills</span>
             </div>
             <p className="text-slate-600 dark:text-slate-400 text-xs md:text-sm max-w-xs mb-6 leading-relaxed">
-              Professional storefront platform for independent technical experts, advisors, and mentors worldwide.
+              Direct Stripe Connect payout infrastructure for software architects, security researchers, and independent technical advisors.
             </p>
             <div className="flex gap-3">
               <a
@@ -53,7 +53,7 @@ export default function Footer() {
 
           {/* Platform Links */}
           <div>
-            <h4 className="font-headline text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4">Platform</h4>
+            <h4 className="font-mono text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-4">// PLATFORM</h4>
             <nav className="flex flex-col gap-2.5 text-xs md:text-sm text-slate-600 dark:text-slate-400">
               <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Home</Link>
               <Link href="/explore" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Explore Mentors</Link>
@@ -63,7 +63,7 @@ export default function Footer() {
 
           {/* Support / Company Links */}
           <div>
-            <h4 className="font-headline text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4">Support</h4>
+            <h4 className="font-mono text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-4">// SUPPORT</h4>
             <nav className="flex flex-col gap-2.5 text-xs md:text-sm text-slate-600 dark:text-slate-400">
               <Link href="/about" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">About Us</Link>
               <Link href="/contact" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Contact Support</Link>
@@ -73,7 +73,7 @@ export default function Footer() {
 
           {/* Legal Links */}
           <div>
-            <h4 className="font-headline text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-4">Legal</h4>
+            <h4 className="font-mono text-xs font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-4">// LEGAL</h4>
             <nav className="flex flex-col gap-2.5 text-xs md:text-sm text-slate-600 dark:text-slate-400">
               <Link href="/privacy" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Terms &amp; Conditions</Link>
@@ -84,7 +84,7 @@ export default function Footer() {
         {/* Bottom Copyright */}
         <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
           <p>&copy; {new Date().getFullYear()} Leap Skills Platform. All Rights Reserved.</p>
-          <p>Built for clarity and performance.</p>
+          <p className="font-mono">Direct payouts. No platform hold periods.</p>
         </div>
       </div>
     </footer>

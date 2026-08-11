@@ -26,7 +26,7 @@ export const CREATORS: Creator[] = [
     rating: 4.9,
     reviewCount: 124,
     startingPrice: 1000,
-    bio: 'Pioneering generative AI workflows and building robust LLM products. Dr. Vance has successfully launched 4 generative AI products and specializes in transitioning senior PMs into specialized high-value AI roles.',
+    bio: 'Architecting fault-tolerant generative AI pipelines and evaluating production LLM systems. Dr. Vance has successfully launched 4 generative AI products and specializes in transitioning senior PMs into specialized high-value AI roles.',
     category: 'tech',
     menteesCount: '800+',
     reachCount: '35k',
@@ -344,7 +344,7 @@ export const TESTIMONIALS: Testimonial[] = [
   },
   {
     id: 't-2',
-    quote: '"As a tech leader, I needed a platform that felt premium. Leap Skills handles the payments and scheduling seamlessly, letting me focus on mentorship."',
+    quote: '"As a tech leader, I needed a storefront that felt authored and intentional. Leap Skills automates calendar sync and processes direct Stripe payouts within seconds, letting me focus entirely on technical advisory."',
     userName: 'Joerg Storm',
     userRole: 'Tech Thought Leader',
     userImage: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200',

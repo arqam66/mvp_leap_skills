@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Show, UserButton } from '@clerk/nextjs';
+import { createClient } from '../lib/supabase/client';
 
 export default function Header() {
   const router = useRouter();
@@ -10,6 +10,17 @@ export default function Header() {
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [dark, setDark] = React.useState(false);
+  const [user, setUser] = React.useState<any>(null);
+
+  const supabase = createClient();
+
+  React.useEffect(() => {
+    supabase.auth.getUser().then(({ data }: any) => setUser(data?.user ?? null));
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+      setUser(session?.user ?? null);
+    });
+    return () => authListener.subscription.unsubscribe();
+  }, []);
 
   React.useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -39,6 +50,12 @@ export default function Header() {
       document.documentElement.classList.remove('dark');
       localStorage.setItem('theme', 'light');
     }
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    router.push('/');
   };
 
   if (pathname === '/dashboard' || pathname === '/login') return null;
@@ -74,7 +91,7 @@ export default function Header() {
             </svg>
           </div>
           <span className="font-headline font-bold text-lg tracking-tight text-slate-900 dark:text-white">
-            Leap Skills
+            CreatorHub Pro
           </span>
         </button>
 
@@ -117,8 +134,8 @@ export default function Header() {
             )}
           </button>
 
-          {/* Clerk / Login Page Auth Buttons */}
-          <Show when="signed-out">
+          {/* Auth Action Buttons */}
+          {!user ? (
             <button
               type="button"
               onClick={() => router.push('/login')}
@@ -126,10 +143,24 @@ export default function Header() {
             >
               Sign In / Login
             </button>
-          </Show>
-          <Show when="signed-in">
-            <UserButton />
-          </Show>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => router.push('/dashboard')}
+                className="text-xs font-bold text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-3 py-1.5 rounded-md transition-colors cursor-pointer"
+              >
+                Dashboard
+              </button>
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 px-2 py-1 transition-colors cursor-pointer"
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
 
           {/* Mobile Menu Toggle */}
           <button
@@ -170,7 +201,7 @@ export default function Header() {
                 {link.label}
               </button>
             ))}
-            <Show when="signed-out">
+            {!user ? (
               <button
                 type="button"
                 onClick={() => {
@@ -181,12 +212,27 @@ export default function Header() {
               >
                 Sign In / Login
               </button>
-            </Show>
-            <Show when="signed-in">
-              <div className="px-4 py-2 flex items-center gap-3">
-                <UserButton showName />
+            ) : (
+              <div className="flex flex-col gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => {
+                    router.push('/dashboard');
+                    setMobileOpen(false);
+                  }}
+                  className="text-left px-4 py-2 text-sm font-bold text-indigo-600 dark:text-indigo-400"
+                >
+                  Go to Dashboard
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="text-left px-4 py-2 text-sm font-semibold text-slate-500"
+                >
+                  Sign Out
+                </button>
               </div>
-            </Show>
+            )}
           </nav>
         </div>
       )}
