@@ -75,10 +75,10 @@ export default function AboutPage() {
             </p>
           </div>
           <button
-            onClick={() => nav.push('/signup')}
+            onClick={() => nav.push('/login')}
             className="px-5 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-md transition-all shrink-0 cursor-pointer"
           >
-            Create Your Account
+            Sign In &amp; Select Role
           </button>
         </div>
       </div>

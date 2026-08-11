@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 export default function Footer() {
   const pathname = usePathname();
 
-  if (pathname === '/dashboard' || pathname === '/signup') return null;
+  if (pathname === '/dashboard' || pathname === '/login') return null;
 
   return (
     <footer className="w-full py-12 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-200">
@@ -57,7 +57,7 @@ export default function Footer() {
             <nav className="flex flex-col gap-2.5 text-xs md:text-sm text-slate-600 dark:text-slate-400">
               <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Home</Link>
               <Link href="/explore" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Explore Mentors</Link>
-              <Link href="/signup" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Sign Up Page</Link>
+              <Link href="/login" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Login &amp; Join Role</Link>
             </nav>
           </div>
 

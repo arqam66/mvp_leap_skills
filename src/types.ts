@@ -49,3 +49,39 @@ export interface Testimonial {
   userImage: string;
   stars: number;
 }
+
+export type UserRole = 'student' | 'instructor';
+
+export interface InstructorQuestionnaire {
+  category: 'tech' | 'design' | 'business' | 'other';
+  title: string;
+  org: string;
+  yearsOfExperience: string;
+  bio: string;
+  primaryOfferingTitle: string;
+  startingPrice: number;
+}
+
+export type WebSocketMessageType =
+  | 'WS_CONNECT'
+  | 'WS_CONNECTED'
+  | 'BOOKING_REQUEST'
+  | 'BOOKING_CONFIRMED'
+  | 'SLOT_UPDATE'
+  | 'PING'
+  | 'PONG';
+
+export interface WebSocketBookingPayload {
+  type: WebSocketMessageType;
+  id?: string;
+  creatorId?: string;
+  creatorName?: string;
+  serviceTitle?: string;
+  clientName?: string;
+  clientEmail?: string;
+  date?: string;
+  time?: string;
+  timestamp?: number;
+  message?: string;
+}
+

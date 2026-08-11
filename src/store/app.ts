@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Creator, Service, Booking } from '../types';
+import { Creator, Service, Booking, UserRole, InstructorQuestionnaire } from '../types';
 import { CREATORS, CREATOR_SERVICES } from '../data/creators';
 import { getFutureDate } from '../utils/dates';
 
@@ -10,6 +10,8 @@ interface AppState {
   directServiceIdToOpen: string | null;
   selectedOfferingType: 'all' | 'mentorship' | 'digital' | 'webinar' | 'cohort';
   dashboardTab: 'home' | 'services' | 'earnings' | 'analytics';
+  userRole: UserRole;
+  instructorApplication: InstructorQuestionnaire | null;
   setSelectedCreator: (creator: Creator) => void;
   addBooking: (booking: Booking) => void;
   cancelBooking: (bookingId: string) => void;
@@ -17,6 +19,8 @@ interface AppState {
   setDirectServiceIdToOpen: (id: string | null) => void;
   setSelectedOfferingType: (t: 'all' | 'mentorship' | 'digital' | 'webinar' | 'cohort') => void;
   setDashboardTab: (t: 'home' | 'services' | 'earnings' | 'analytics') => void;
+  setUserRole: (role: UserRole) => void;
+  setInstructorApplication: (app: InstructorQuestionnaire) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -51,6 +55,8 @@ export const useAppStore = create<AppState>((set) => ({
   directServiceIdToOpen: null,
   selectedOfferingType: 'all',
   dashboardTab: 'home',
+  userRole: 'student',
+  instructorApplication: null,
   setSelectedCreator: (creator) => set({ selectedCreator: creator }),
   addBooking: (booking) => set((s) => ({ bookings: [booking, ...s.bookings] })),
   cancelBooking: (bookingId) => set((s) => ({ bookings: s.bookings.filter((b) => b.id !== bookingId) })),
@@ -63,4 +69,7 @@ export const useAppStore = create<AppState>((set) => ({
   setDirectServiceIdToOpen: (id) => set({ directServiceIdToOpen: id }),
   setSelectedOfferingType: (t) => set({ selectedOfferingType: t }),
   setDashboardTab: (t) => set({ dashboardTab: t }),
+  setUserRole: (role) => set({ userRole: role }),
+  setInstructorApplication: (app) => set({ instructorApplication: app }),
 }));
+

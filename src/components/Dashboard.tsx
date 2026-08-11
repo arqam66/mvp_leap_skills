@@ -18,6 +18,8 @@ export default function Dashboard() {
   const addBooking = useAppStore((s) => s.addBooking);
   const cancelBooking = useAppStore((s) => s.cancelBooking);
 
+  const userRole = useAppStore((s) => s.userRole);
+
   const [activeTab, setActiveTab] = React.useState<'home' | 'services' | 'earnings' | 'analytics'>('home');
   const [showAddServiceModal, setShowAddServiceModal] = React.useState(false);
   const [newTitle, setNewTitle] = React.useState('');
@@ -44,6 +46,10 @@ export default function Dashboard() {
 
   const handleCreateServiceSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (userRole === 'student') {
+      alert('Unauthorized: Student accounts cannot create services or edit creator profiles.');
+      return;
+    }
     if (!newTitle || !newDesc) return;
     const newService: Service = {
       id: 'custom-' + Math.random().toString(36).substring(2, 11),
@@ -79,6 +85,10 @@ export default function Dashboard() {
   };
 
   const handleExecutePayout = () => {
+    if (userRole === 'student') {
+      alert('Unauthorized: Student accounts do not have payout access.');
+      return;
+    }
     if (withdrawableAmount <= 0) return;
     setLastWithdrawnAmount(withdrawableAmount);
     setWithdrawSuccessModal(true);
@@ -151,6 +161,18 @@ export default function Dashboard() {
             Back to Public Mode
           </button>
         </div>
+
+        {userRole === 'student' && (
+          <div className="bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-900/60 p-5 rounded-2xl flex items-start gap-4 text-amber-800 dark:text-amber-300">
+            <span className="material-symbols-outlined text-amber-600 dark:text-amber-400 text-2xl shrink-0">lock</span>
+            <div>
+              <h4 className="font-bold text-sm">Student Account Active — Read Only Authorization</h4>
+              <p className="text-xs mt-1 leading-relaxed">
+                You are currently signed in as a <strong>Student</strong>. Students can browse, ask questions, and book meeting sessions over WebSockets with other mentors. <strong>Students do not have authorization to edit mentor profiles or change creator details.</strong> To manage store settings or edit profiles, please log in as an Instructor.
+              </p>
+            </div>
+          </div>
+        )}
 
         {activeTab === 'home' && (
           <div className="space-y-8 animate-fade-in">

@@ -3,9 +3,10 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '../store/app';
-import { Creator, Service, Booking } from '../types';
+import { Creator, Service, Booking, WebSocketBookingPayload } from '../types';
 import { CREATORS, CREATOR_SERVICES, TESTIMONIALS } from '../data/creators';
 import { getFutureDate, getDateOptions } from '../utils/dates';
+import { wsBookingService } from '../lib/websocket';
 
 interface ProfilePageProps {
   slug: string;
@@ -30,6 +31,22 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
   const [clientName, setClientName] = React.useState('');
   const [clientEmail, setClientEmail] = React.useState('');
   const [clientNotes, setClientNotes] = React.useState('');
+  const [wsConnected, setWsConnected] = React.useState(false);
+  const [wsPayload, setWsPayload] = React.useState<WebSocketBookingPayload | null>(null);
+
+  React.useEffect(() => {
+    wsBookingService.connect();
+    const unsubStatus = wsBookingService.subscribeStatus((connected) => {
+      setWsConnected(connected);
+    });
+    const unsubMsg = wsBookingService.subscribeMessage((payload) => {
+      setWsPayload(payload);
+    });
+    return () => {
+      unsubStatus();
+      unsubMsg();
+    };
+  }, []);
 
   React.useEffect(() => {
     if (creator) setSelectedCreator(creator);
@@ -96,6 +113,18 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
     };
 
     addBooking(newBooking);
+
+    // Send real-time WebSocket booking transaction
+    wsBookingService.sendBookingRequest({
+      creatorId: creator.id,
+      creatorName: creator.name,
+      serviceTitle: selectedService.title,
+      clientName,
+      clientEmail,
+      date: selectedDate,
+      time: selectedTime,
+    });
+
     setCheckoutStep(3);
   };
 
@@ -253,7 +282,13 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
               <button onClick={handleCloseCheckout} className="absolute right-5 top-5 text-indigo-100 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-full leading-none focus:outline-none cursor-pointer">
                 <span className="material-symbols-outlined text-[18px] font-extrabold">close</span>
               </button>
-              <span className="text-[10px] font-bold tracking-widest text-indigo-200 uppercase block mb-1">Storefront Checkout</span>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-bold tracking-widest text-indigo-200 uppercase">Storefront Checkout</span>
+                <span className="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 text-[9px] font-extrabold px-2 py-0.5 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                  WS Connected
+                </span>
+              </div>
               <h3 className="font-headline text-lg font-bold truncate leading-tight pr-10">{selectedService.title}</h3>
               <p className="text-white font-extrabold text-sm mt-1">Amount Due: <span className="text-indigo-200 font-extrabold">PKR {selectedService.price.toLocaleString()}</span></p>
             </div>
@@ -327,7 +362,7 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
                   </div>
                   <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50 p-4 rounded-xl text-[10px] text-success-vibrant dark:text-emerald-400 leading-relaxed font-bold flex gap-2">
                     <span className="material-symbols-outlined text-base shrink-0 select-none">lock</span>
-                    Secure sandboxed payments powered by Leap Skills. No real charge will occur during this preview.
+                    Secure real-time booking over WebSocket connection. Instant confirmation broadcast.
                   </div>
                   <div className="flex gap-3 pt-4">
                     {!selectedService.isDownloadable && (
@@ -344,9 +379,15 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
                     <span className="material-symbols-outlined text-[32px] font-extrabold leading-none">done</span>
                   </div>
                   <div>
-                    <h4 className="font-headline text-lg font-bold text-[#1a1c1c] dark:text-white">Booking Confirmed!</h4>
-                    <p className="text-[#5f5e5e] dark:text-slate-300 text-xs mt-1.5 leading-relaxed">Your session with {creator.name} is successfully registered. A confirmation link and calendar invitation have been sent.</p>
+                    <h4 className="font-headline text-lg font-bold text-[#1a1c1c] dark:text-white">Booking Confirmed via WebSocket!</h4>
+                    <p className="text-[#5f5e5e] dark:text-slate-300 text-xs mt-1.5 leading-relaxed">Your session with {creator.name} is successfully registered over WebSocket real-time connection.</p>
                   </div>
+                  {wsPayload && wsPayload.type === 'BOOKING_CONFIRMED' && (
+                    <div className="p-3 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 rounded-xl text-xs text-indigo-700 dark:text-indigo-300 font-semibold flex items-center justify-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                      WS Signal: {wsPayload.message}
+                    </div>
+                  )}
                   <div className="bg-gray-50/50 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700 text-xs p-4 rounded-xl text-left space-y-2 max-w-sm mx-auto font-medium text-gray-800 dark:text-slate-200">
                     <div className="flex justify-between"><span className="text-gray-400 dark:text-slate-400">Host:</span><span className="font-bold text-gray-800 dark:text-white">{creator.name}</span></div>
                     <div className="flex justify-between"><span className="text-gray-400 dark:text-slate-400">Session/Service:</span><span className="font-bold text-gray-800 dark:text-white">{selectedService.title}</span></div>

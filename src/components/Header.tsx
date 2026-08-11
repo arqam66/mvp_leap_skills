@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Show, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
+import { Show, UserButton } from '@clerk/nextjs';
 
 export default function Header() {
   const router = useRouter();
@@ -41,7 +41,7 @@ export default function Header() {
     }
   };
 
-  if (pathname === '/dashboard' || pathname === '/signup') return null;
+  if (pathname === '/dashboard' || pathname === '/login') return null;
 
   const isActive = (p: string) => pathname === p;
 
@@ -117,24 +117,15 @@ export default function Header() {
             )}
           </button>
 
-          {/* Clerk Auth Buttons */}
+          {/* Clerk / Login Page Auth Buttons */}
           <Show when="signed-out">
-            <SignInButton mode="modal">
-              <button
-                type="button"
-                className="text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white px-3 py-2 rounded-md transition-colors cursor-pointer"
-              >
-                Sign In
-              </button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <button
-                type="button"
-                className="text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 px-4 py-2 rounded-md transition-colors focus-ring cursor-pointer"
-              >
-                Sign Up
-              </button>
-            </SignUpButton>
+            <button
+              type="button"
+              onClick={() => router.push('/login')}
+              className="text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 px-4 py-2 rounded-md transition-colors focus-ring cursor-pointer shadow-xs"
+            >
+              Sign In / Login
+            </button>
           </Show>
           <Show when="signed-in">
             <UserButton />
@@ -180,24 +171,16 @@ export default function Header() {
               </button>
             ))}
             <Show when="signed-out">
-              <SignInButton mode="modal">
-                <button
-                  type="button"
-                  onClick={() => setMobileOpen(false)}
-                  className="text-left px-4 py-3 rounded-md text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus-ring cursor-pointer"
-                >
-                  Sign In
-                </button>
-              </SignInButton>
-              <SignUpButton mode="modal">
-                <button
-                  type="button"
-                  onClick={() => setMobileOpen(false)}
-                  className="text-left px-4 py-3 rounded-md text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors focus-ring cursor-pointer"
-                >
-                  Sign Up
-                </button>
-              </SignUpButton>
+              <button
+                type="button"
+                onClick={() => {
+                  router.push('/login');
+                  setMobileOpen(false);
+                }}
+                className="text-left px-4 py-3 rounded-md text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors focus-ring cursor-pointer"
+              >
+                Sign In / Login
+              </button>
             </Show>
             <Show when="signed-in">
               <div className="px-4 py-2 flex items-center gap-3">
@@ -210,5 +193,6 @@ export default function Header() {
     </header>
   );
 }
+
 
 
