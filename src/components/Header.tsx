@@ -26,7 +26,6 @@ export default function Header() {
   }, []);
 
   const activeUser = clerkUser || supabaseUser;
-  const userEmail = clerkUser?.primaryEmailAddress?.emailAddress || clerkUser?.emailAddresses?.[0]?.emailAddress || supabaseUser?.email;
 
   React.useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -155,11 +154,6 @@ export default function Header() {
             </button>
           ) : (
             <div className="flex items-center gap-2">
-              {userEmail && (
-                <span className="hidden sm:inline-block text-xs font-mono text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 rounded-md max-w-[180px] truncate" title={userEmail}>
-                  {userEmail}
-                </span>
-              )}
               <button
                 type="button"
                 onClick={() => router.push('/dashboard')}
@@ -233,11 +227,6 @@ export default function Header() {
               </button>
             ) : (
               <div className="flex flex-col gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                {userEmail && (
-                  <div className="px-4 text-xs font-mono text-indigo-500 dark:text-indigo-400 font-semibold truncate">
-                    {userEmail}
-                  </div>
-                )}
                 <button
                   type="button"
                   onClick={() => {

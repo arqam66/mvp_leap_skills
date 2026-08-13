@@ -1,0 +1,51 @@
+# Leap Skills — llms.txt
+# This file is for AI language model crawlers (ChatGPT, Perplexity, Claude, Gemini, etc.)
+# It describes what this website is, what it does, and what pages are important.
+# Format: https://llmstxt.org
+
+# Site Name
+> Leap Skills
+
+## What is Leap Skills?
+
+Leap Skills (leapskills.sbs) is a **creator monetization and technical mentorship platform** for
+principal engineers, security architects, DevOps specialists, and independent technical advisors.
+
+It enables technical creators to:
+- Accept 1:1 paid consultation bookings from clients worldwide
+- Sell digital products (templates, PDFs, code packs) via a public storefront link
+- Offer group cohorts, webinars, and async video reviews
+- Receive instant Stripe Connect payouts (no escrow, no delays)
+- Sync sessions automatically with Google Calendar
+- Manage client messages (paid DMs) from a command center dashboard
+
+There are zero platform commission fees on the first $1,000 earned. After that, a flat 2.5% fee applies.
+Standard Stripe processing fees (~2.9% + $0.30) also apply.
+
+## Who is this for?
+
+- Software engineers, security researchers, DevOps/cloud architects
+- Technical content creators wanting to monetize expertise
+- Career coaches targeting developers and IT professionals
+- Students and junior developers seeking paid 1:1 mentorship sessions
+
+## Key Pages
+
+- [Homepage](https://leapskills.sbs/) — Platform overview, value proposition, how to get started
+- [Explore Creators](https://leapskills.sbs/explore) — Browse public creator profiles and book sessions
+- [About](https://leapskills.sbs/about) — Mission, core values, how payouts and calendar sync work
+- [FAQ](https://leapskills.sbs/faq) — Answers about bookings, payout timelines, storefront setup
+- [Contact / Support](https://leapskills.sbs/contact) — Reach the engineering support team
+- [Privacy Policy](https://leapskills.sbs/privacy) — Data handling, GDPR rights, cookie policy
+- [Terms & Conditions](https://leapskills.sbs/terms) — Governing law (Pakistan), payment terms
+
+## Technology
+
+Built with Next.js 14 (App Router), Supabase (PostgreSQL + Realtime), Clerk auth,
+Stripe Connect for instant payouts, WebRTC for in-browser video calls,
+and Google Calendar API for 2-way sync.
+
+## Contact
+
+Email: info@leapskills.sbs
+Website: https://leapskills.sbs
