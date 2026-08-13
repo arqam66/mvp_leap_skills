@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Service, ServiceFormat } from '../../types';
+import { formatPKR } from '../../utils/currency';
 
 interface ServiceCardProps {
   service: Service;
@@ -28,8 +29,8 @@ export default function ServiceCard({ service, onBook }: ServiceCardProps) {
           <span className={`px-2.5 py-1 text-xs font-mono font-semibold rounded-md border border-current/20 ${badge.bg} ${badge.text}`}>
             {badge.label}
           </span>
-          <div className="font-mono font-extrabold text-xl text-slate-950 dark:text-white">
-            ${service.price}
+          <div className="font-mono font-extrabold text-lg text-slate-950 dark:text-white">
+            {formatPKR(service.price)}
           </div>
         </div>
 

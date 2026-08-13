@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.39.6",
     "@livekit/components-react": "^2.8.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.49.1",

@@ -347,29 +347,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Call to Action Section */}
-      <section className="py-16 md:py-24 bg-[#090d16] text-white">
-        <div className="max-w-5xl mx-auto px-6 text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-950/80 text-indigo-300 text-xs font-mono font-bold rounded border border-indigo-800/80">
-            <span>ZERO PLATFORM HOLD PERIODS</span>
-          </div>
-          <h2 className="font-headline text-3xl md:text-5xl font-extrabold tracking-tight text-white max-w-3xl mx-auto leading-tight">
-            Ready to deploy your custom advisory storefront?
-          </h2>
-          <p className="text-slate-300 text-sm md:text-base max-w-xl mx-auto leading-relaxed">
-            Set up your services, configure your booking calendar, and connect your Stripe payout destination in under 5 minutes.
-          </p>
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={() => router.push('/dashboard')}
-              className="px-8 py-4 bg-white text-slate-950 font-bold text-sm rounded-md hover:bg-slate-100 transition-all active:scale-[0.98] focus-ring cursor-pointer shadow-lg"
-            >
-              Launch Your Storefront Now &rarr;
-            </button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

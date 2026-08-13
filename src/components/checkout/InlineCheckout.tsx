@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Service, Creator } from '../../types';
+import { formatPKR } from '../../utils/currency';
 
 interface InlineCheckoutProps {
   service: Service;
@@ -109,7 +110,7 @@ export default function InlineCheckout({
       <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl mb-6 space-y-2 border border-slate-100 dark:border-slate-800">
         <div className="flex justify-between items-center text-sm font-bold">
           <span>{service.title}</span>
-          <span className="font-mono text-base">${service.price}</span>
+          <span className="font-mono text-base">{formatPKR(service.price)}</span>
         </div>
         <div className="text-xs text-slate-500">
           Instructor: <span className="font-semibold text-slate-700 dark:text-slate-200">{creator.name}</span>
@@ -120,8 +121,8 @@ export default function InlineCheckout({
           </div>
         )}
         <div className="pt-2 border-t border-slate-200 dark:border-slate-700 flex justify-between text-xs text-slate-400">
-          <span>Instant Payout Rail: Commission (10%) ${commission}</span>
-          <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Net Payout to Expert ${trainerEarnings}</span>
+          <span>Instant Payout Rail: Commission (10%) {formatPKR(commission)}</span>
+          <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Net Payout {formatPKR(trainerEarnings)}</span>
         </div>
       </div>
 
@@ -209,7 +210,7 @@ export default function InlineCheckout({
           disabled={loading}
           className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg cursor-pointer disabled:opacity-50 mt-2"
         >
-          {loading ? 'Processing Payment...' : `Pay $${service.price} & Confirm Booking`}
+          {loading ? 'Processing Payment...' : `Pay ${formatPKR(service.price)} & Confirm Booking`}
         </button>
       </form>
     </div>

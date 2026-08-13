@@ -2,25 +2,31 @@
 
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { useUser, useClerk, UserButton } from '@clerk/nextjs';
 import { createClient } from '../lib/supabase/client';
 
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
+  const { user: clerkUser, isLoaded } = useUser();
+  const { signOut } = useClerk();
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [dark, setDark] = React.useState(false);
-  const [user, setUser] = React.useState<any>(null);
+  const [supabaseUser, setSupabaseUser] = React.useState<any>(null);
 
   const supabase = createClient();
 
   React.useEffect(() => {
-    supabase.auth.getUser().then(({ data }: any) => setUser(data?.user ?? null));
+    supabase.auth.getUser().then(({ data }: any) => setSupabaseUser(data?.user ?? null));
     const { data: authListener } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
-      setUser(session?.user ?? null);
+      setSupabaseUser(session?.user ?? null);
     });
     return () => authListener.subscription.unsubscribe();
   }, []);
+
+  const activeUser = clerkUser || supabaseUser;
+  const userEmail = clerkUser?.primaryEmailAddress?.emailAddress || clerkUser?.emailAddresses?.[0]?.emailAddress || supabaseUser?.email;
 
   React.useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -53,8 +59,12 @@ export default function Header() {
   };
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
+    if (clerkUser) {
+      await signOut();
+    } else {
+      await supabase.auth.signOut();
+    }
+    setSupabaseUser(null);
     router.push('/');
   };
 
@@ -91,7 +101,7 @@ export default function Header() {
             </svg>
           </div>
           <span className="font-headline font-bold text-lg tracking-tight text-slate-900 dark:text-white">
-            CreatorHub Pro
+            Leap Skills
           </span>
         </button>
 
@@ -135,7 +145,7 @@ export default function Header() {
           </button>
 
           {/* Auth Action Buttons */}
-          {!user ? (
+          {!activeUser ? (
             <button
               type="button"
               onClick={() => router.push('/login')}
@@ -145,6 +155,11 @@ export default function Header() {
             </button>
           ) : (
             <div className="flex items-center gap-2">
+              {userEmail && (
+                <span className="hidden sm:inline-block text-xs font-mono text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 px-2.5 py-1 rounded-md max-w-[180px] truncate" title={userEmail}>
+                  {userEmail}
+                </span>
+              )}
               <button
                 type="button"
                 onClick={() => router.push('/dashboard')}
@@ -152,13 +167,17 @@ export default function Header() {
               >
                 Dashboard
               </button>
-              <button
-                type="button"
-                onClick={handleSignOut}
-                className="text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 px-2 py-1 transition-colors cursor-pointer"
-              >
-                Sign Out
-              </button>
+              {clerkUser ? (
+                <UserButton afterSignOutUrl="/" />
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 px-2 py-1 transition-colors cursor-pointer"
+                >
+                  Sign Out
+                </button>
+              )}
             </div>
           )}
 
@@ -201,7 +220,7 @@ export default function Header() {
                 {link.label}
               </button>
             ))}
-            {!user ? (
+            {!activeUser ? (
               <button
                 type="button"
                 onClick={() => {
@@ -214,6 +233,11 @@ export default function Header() {
               </button>
             ) : (
               <div className="flex flex-col gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                {userEmail && (
+                  <div className="px-4 text-xs font-mono text-indigo-500 dark:text-indigo-400 font-semibold truncate">
+                    {userEmail}
+                  </div>
+                )}
                 <button
                   type="button"
                   onClick={() => {

@@ -1,23 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser, SignIn, SignUp } from '@clerk/nextjs';
 import { createClient } from '../../lib/supabase/client';
 import { useAppStore } from '../../store/app';
 import { UserRole, InstructorQuestionnaire } from '../../types';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { isLoaded, isSignedIn, user } = useUser();
   const supabase = createClient();
   const setUserRole = useAppStore((s) => s.setUserRole);
   const setInstructorApplication = useAppStore((s) => s.setInstructorApplication);
 
   const [activeStep, setActiveStep] = useState<'auth' | 'role_select' | 'instructor_questions'>('auth');
+  const [authMode, setAuthMode] = useState<'clerk' | 'custom'>('clerk');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      // User is authenticated via Clerk
+      router.push('/dashboard');
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   // Instructor Questionnaire state
   const [category, setCategory] = useState<'tech' | 'design' | 'business' | 'other'>('tech');
@@ -109,49 +119,68 @@ export default function LoginPage() {
           )}
 
           {activeStep === 'auth' && (
-            <form onSubmit={handleAuthSubmit} className="space-y-4 max-w-md mx-auto">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Email</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
-                />
-              </div>
+            <div className="flex flex-col items-center">
+              {authMode === 'clerk' ? (
+                <div className="w-full flex justify-center py-2">
+                  {isSignUp ? (
+                    <SignUp routing="hash" fallbackRedirectUrl="/dashboard" />
+                  ) : (
+                    <SignIn routing="hash" fallbackRedirectUrl="/dashboard" />
+                  )}
+                </div>
+              ) : (
+                <form onSubmit={handleAuthSubmit} className="space-y-4 w-full max-w-md mx-auto">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Email</label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      required
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                    />
+                  </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Password</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
-                />
-              </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Password</label>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      required
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                    />
+                  </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-sm transition-all shadow-md cursor-pointer disabled:opacity-50"
-              >
-                {loading ? 'Processing...' : isSignUp ? 'Create Account & Continue' : 'Sign In'}
-              </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-sm transition-all shadow-md cursor-pointer disabled:opacity-50"
+                  >
+                    {loading ? 'Processing...' : isSignUp ? 'Create Account & Continue' : 'Sign In'}
+                  </button>
+                </form>
+              )}
 
-              <div className="text-center pt-2">
+              <div className="text-center pt-4 space-y-2">
                 <button
                   type="button"
                   onClick={() => setIsSignUp(!isSignUp)}
-                  className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                  className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer block mx-auto"
                 >
                   {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setAuthMode(authMode === 'clerk' ? 'custom' : 'clerk')}
+                  className="text-[11px] text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 underline cursor-pointer"
+                >
+                  {authMode === 'clerk' ? 'Switch to Email/Password Mode' : 'Switch to Clerk Auth Mode'}
+                </button>
               </div>
-            </form>
+            </div>
           )}
 
           {activeStep === 'role_select' && (

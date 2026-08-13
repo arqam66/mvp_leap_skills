@@ -2,9 +2,11 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 import { useAppStore } from '../store/app';
-import { Service, Booking, ServiceFormat, PaidDMThread } from '../types';
+import { Service, Booking, ServiceFormat, PaidDMThread, Creator } from '../types';
 import { getFutureDate } from '../utils/dates';
+import { formatPKR } from '../utils/currency';
 import { useShallow } from 'zustand/shallow';
 import { useTrainerDashboard } from '../hooks/useTrainerDashboard';
 
@@ -13,13 +15,18 @@ const EMPTY_SERVICES: Service[] = [];
 
 export default function Dashboard() {
   const router = useRouter();
+  const { user: clerkUser, isLoaded } = useUser();
   const selectedCreator = useAppStore((s) => s.selectedCreator);
+  const setSelectedCreator = useAppStore((s) => s.setSelectedCreator);
   const creatorServices = useAppStore((s) => s.servicesMap[s.selectedCreator.id] ?? EMPTY_SERVICES);
   const bookings = useAppStore(useShallow((s) => s.bookings.filter((b) => b.creatorId === s.selectedCreator.id)));
   const addService = useAppStore((s) => s.addService);
   const addBooking = useAppStore((s) => s.addBooking);
   const cancelBooking = useAppStore((s) => s.cancelBooking);
   const userRole = useAppStore((s) => s.userRole);
+  const setUserRole = useAppStore((s) => s.setUserRole);
+
+  const userEmail = clerkUser?.primaryEmailAddress?.emailAddress || clerkUser?.emailAddresses?.[0]?.emailAddress;
 
   // Real data from Supabase (overlays mock data when available)
   const { earnings: realEarnings, paidDMs: realPaidDMs, services: realServices, bookings: realBookings, loading: supabaseLoading } = useTrainerDashboard();
@@ -72,6 +79,30 @@ export default function Dashboard() {
   const [dmKeyword, setDmKeyword] = useState('MENTOR');
   const [dmTemplate, setDmTemplate] = useState(`Hey! Thanks for messaging. You can book my 1:1 session or paid DM directly here: https://creatorhub.pro/${selectedCreator.id}`);
 
+  // Mentor Questionnaire State in Dashboard
+  const [showMentorQuestionnaire, setShowMentorQuestionnaire] = useState(userRole !== 'instructor');
+  const [mentorCategory, setMentorCategory] = useState<'tech' | 'design' | 'business' | 'other'>('tech');
+  const [mentorTitle, setMentorTitle] = useState('');
+  const [mentorOrg, setMentorOrg] = useState('');
+  const [mentorYears, setMentorYears] = useState('5+ years');
+  const [mentorBio, setMentorBio] = useState('');
+  const [mentorPrice, setMentorPrice] = useState(75);
+
+  const handleMentorQuestionnaireSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setUserRole('instructor');
+    setSelectedCreator({
+      ...selectedCreator,
+      name: clerkUser?.fullName || selectedCreator.name || 'Mentor Creator',
+      title: mentorTitle || 'Mentor & Technical Advisor',
+      org: mentorOrg || 'Independent Expert',
+      bio: mentorBio || 'Passionate mentor helping professionals grow their skills and advance their careers.',
+      startingPrice: Number(mentorPrice) || 75,
+      category: mentorCategory,
+    });
+    setShowMentorQuestionnaire(false);
+  };
+
   const handleCreateServiceSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle || !newDesc) return;
@@ -115,7 +146,7 @@ export default function Dashboard() {
               ⚡
             </div>
             <div>
-              <div className="font-headline font-bold text-base leading-tight">CreatorHub Pro</div>
+              <div className="font-headline font-bold text-base leading-tight">Leap Skills</div>
               <div className="text-[11px] text-slate-400 font-mono">Single-Link Platform</div>
             </div>
           </div>
@@ -176,7 +207,9 @@ export default function Dashboard() {
                 <h1 className="font-headline text-3xl font-extrabold tracking-tight">
                   Welcome back, {selectedCreator.name} 👋
                 </h1>
-                <p className="text-sm text-slate-500 mt-1">Here is your single-link performance overview for today.</p>
+                <p className="text-sm text-slate-500 mt-1">
+                  Here is your single-link performance overview for today.
+                </p>
               </div>
               <button
                 onClick={() => router.push(`/profile/${selectedCreator.id}`)}
@@ -186,16 +219,129 @@ export default function Dashboard() {
               </button>
             </div>
 
+            {/* Mentor Onboarding Prompt / Questionnaire */}
+            {(userRole !== 'instructor' || showMentorQuestionnaire) && (
+              <div className="p-6 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-slate-900 border border-indigo-700/80 text-white rounded-3xl space-y-6 shadow-xl animate-fade-in">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 text-indigo-200 text-xs font-mono font-bold rounded-full border border-white/20">
+                      <span>MENTOR QUESTIONNAIRE</span>
+                    </div>
+                    <h2 className="font-headline text-2xl font-extrabold text-white">
+                      Want to be a Mentor on CreatorHub Pro?
+                    </h2>
+                    <p className="text-sm text-indigo-100/80 max-w-xl">
+                      Answer a few quick questions to create your mentor profile, configure your booking calendar, and start receiving 1:1 sessions & paid DMs.
+                    </p>
+                  </div>
+                  {!showMentorQuestionnaire && (
+                    <button
+                      type="button"
+                      onClick={() => setShowMentorQuestionnaire(true)}
+                      className="px-6 py-3 bg-white text-indigo-950 font-bold text-sm rounded-xl hover:bg-indigo-50 transition-all shadow-md cursor-pointer shrink-0"
+                    >
+                      Answer Mentor Questions &rarr;
+                    </button>
+                  )}
+                </div>
+
+                {showMentorQuestionnaire && (
+                  <form onSubmit={handleMentorQuestionnaireSubmit} className="mt-4 pt-6 border-t border-white/15 space-y-4 bg-slate-950/60 p-6 rounded-2xl border border-white/10">
+                    <h3 className="text-lg font-bold text-white mb-2">Mentor Application & Profile Questions</h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-indigo-200 mb-1">Expertise Category</label>
+                        <select
+                          value={mentorCategory}
+                          onChange={(e: any) => setMentorCategory(e.target.value)}
+                          className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-indigo-400"
+                        >
+                          <option value="tech">Software & AI Technology</option>
+                          <option value="design">UI/UX Design & Product</option>
+                          <option value="business">Business & Startup Consulting</option>
+                          <option value="other">Career Coaching & Other</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-indigo-200 mb-1">Headline / Professional Title</label>
+                        <input
+                          type="text"
+                          value={mentorTitle}
+                          onChange={(e) => setMentorTitle(e.target.value)}
+                          placeholder="e.g. Senior Software Architect @ TechCorp"
+                          required
+                          className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-indigo-400"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-indigo-200 mb-1">Organization / Company</label>
+                        <input
+                          type="text"
+                          value={mentorOrg}
+                          onChange={(e) => setMentorOrg(e.target.value)}
+                          placeholder="e.g. Independent Advisor / Startup Founder"
+                          className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-indigo-400"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-indigo-200 mb-1">Starting Session Rate (PKR / Rs.)</label>
+                        <input
+                          type="number"
+                          value={mentorPrice}
+                          onChange={(e) => setMentorPrice(Number(e.target.value))}
+                          required
+                          className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-indigo-400"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-indigo-200 mb-1">Bio / About Your Mentorship</label>
+                      <textarea
+                        value={mentorBio}
+                        onChange={(e) => setMentorBio(e.target.value)}
+                        placeholder="Describe your domain experience and how you guide mentes..."
+                        rows={3}
+                        className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-indigo-400"
+                      />
+                    </div>
+
+                    <div className="flex justify-end gap-3 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowMentorQuestionnaire(false)}
+                        className="px-5 py-2.5 border border-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-800 text-slate-300"
+                      >
+                        Dismiss
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-6 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold rounded-xl shadow-lg transition-all cursor-pointer"
+                      >
+                        Submit & Display Mentor Profile ✨
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            )}
+
             {/* Metrics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Gross Revenue</div>
-                <div className="text-2xl font-black font-mono mt-1">$3,840</div>
+                <div className="text-2xl font-black font-mono mt-1">Rs. 384,000</div>
                 <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-1">↑ 18% vs last month</div>
               </div>
               <div className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Withdrawable Balance</div>
-                <div className="text-2xl font-black font-mono text-indigo-600 dark:text-indigo-400 mt-1">${withdrawableAmount}</div>
+                <div className="text-2xl font-black font-mono text-indigo-600 dark:text-indigo-400 mt-1">{formatPKR(withdrawableAmount || 145000)}</div>
                 <div className="text-[11px] text-slate-400 mt-1">Instant Payout Rail Active</div>
               </div>
               <div className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">

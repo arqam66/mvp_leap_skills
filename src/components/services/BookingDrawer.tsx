@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useUser } from '@clerk/nextjs';
 import { Service, Creator, ServiceFormat } from '../../types';
 import { getDateOptions, getFutureDate } from '../../utils/dates';
+import { formatPKR } from '../../utils/currency';
 
 interface BookingDrawerProps {
   service: Service | null;
@@ -25,6 +27,7 @@ export default function BookingDrawer({
   onClose,
   onProceedToCheckout,
 }: BookingDrawerProps) {
+  const { user } = useUser();
   if (!service) return null;
 
   const format = service.format || (service.type as ServiceFormat) || 'one_on_one';
@@ -32,10 +35,18 @@ export default function BookingDrawer({
 
   const [selectedDate, setSelectedDate] = useState<string>(dateOptions[0]?.txt || getFutureDate(2));
   const [selectedTime, setSelectedTime] = useState<string>('10:00 AM');
-  const [clientName, setClientName] = useState('');
-  const [clientEmail, setClientEmail] = useState('');
+  const [clientName, setClientName] = useState(user?.fullName || '');
+  const [clientEmail, setClientEmail] = useState(user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress || '');
   const [notes, setNotes] = useState('');
   const [dmQuestion, setDmQuestion] = useState('');
+
+  useEffect(() => {
+    if (user) {
+      if (!clientName && user.fullName) setClientName(user.fullName);
+      const email = user.primaryEmailAddress?.emailAddress || user.emailAddresses?.[0]?.emailAddress;
+      if (!clientEmail && email) setClientEmail(email);
+    }
+  }, [user]);
 
   const timeSlots = ['09:00 AM', '10:00 AM', '11:30 AM', '02:00 PM', '04:00 PM', '06:00 PM'];
 
@@ -186,7 +197,7 @@ export default function BookingDrawer({
               type="submit"
               className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg cursor-pointer"
             >
-              Proceed to Inline Checkout (${service.price}) &rarr;
+              Proceed to Inline Checkout ({formatPKR(service.price)}) &rarr;
             </button>
           </form>
         </div>
