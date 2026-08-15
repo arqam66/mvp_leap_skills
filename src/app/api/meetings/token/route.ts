@@ -1,12 +1,26 @@
 import { NextResponse } from 'next/server';
 import { AccessToken } from 'livekit-server-sdk';
+import { withRateLimit } from '../../../../lib/api-guard';
+
+const ROOM_REGEX = /^[a-zA-Z0-9_-]{1,64}$/;
 
 export async function GET(request: Request) {
+  const rateLimitError = withRateLimit(request, { limit: 60 });
+  if (rateLimitError) return rateLimitError;
+
   try {
     const { searchParams } = new URL(request.url);
     const room = searchParams.get('room') || 'default-room';
     const username = searchParams.get('username') || `user_${Math.random().toString(36).substring(2, 7)}`;
     const isHost = searchParams.get('isHost') === 'true';
+
+    if (!ROOM_REGEX.test(room)) {
+      return NextResponse.json({ error: 'Invalid room name' }, { status: 400 });
+    }
+
+    if (username.length > 64 || !/^[a-zA-Z0-9_-]+$/.test(username)) {
+      return NextResponse.json({ error: 'Invalid username' }, { status: 400 });
+    }
 
     const apiKey = process.env.LIVEKIT_API_KEY || 'devkey';
     const apiSecret = process.env.LIVEKIT_API_SECRET || 'secretsecretsecretsecretsecretsecret';
@@ -19,7 +33,7 @@ export async function GET(request: Request) {
     at.addGrant({
       room,
       roomJoin: true,
-      canPublish: isHost ? true : true,
+      canPublish: true,
       canSubscribe: true,
     });
 

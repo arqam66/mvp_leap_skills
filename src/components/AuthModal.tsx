@@ -11,7 +11,6 @@ interface AuthModalProps {
 
 export default function AuthModal({ open, onClose }: AuthModalProps) {
   const router = useRouter();
-  const [isSignUp, setIsSignUp] = React.useState(true);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [name, setName] = React.useState('');
@@ -29,37 +28,25 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
     setErrorMsg(null);
 
     try {
-      if (isSignUp) {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: name,
-              role,
-            },
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+            role,
           },
-        });
-        if (error) throw error;
+        },
+      });
+      if (error) throw error;
 
-        if (data.user) {
-          if (role === 'trainer') {
-            router.push('/onboarding/trainer');
-          } else {
-            router.push('/dashboard');
-          }
-          onClose();
-        }
-      } else {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        if (data.user) {
+      if (data.user) {
+        if (role === 'trainer') {
+          router.push('/onboarding/trainer');
+        } else {
           router.push('/dashboard');
-          onClose();
         }
+        onClose();
       }
     } catch (err: any) {
       setErrorMsg(err.message || 'Authentication failed');
@@ -103,10 +90,10 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="font-headline text-2xl font-bold text-[#1a1c1c] dark:text-white mb-2">
-            {isSignUp ? 'Create your account' : 'Welcome back'}
+            Create your account
           </h2>
           <p className="text-sm text-[#5f5e5e] dark:text-slate-300">
-            {isSignUp ? 'Start your creator journey today' : 'Sign in to your account'}
+            Start your creator journey today
           </p>
         </div>
 
@@ -117,8 +104,7 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
         )}
 
         {/* Role Toggle for Signup */}
-        {isSignUp && (
-          <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mb-6">
+        <div className="flex gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mb-6">
             <button
               type="button"
               onClick={() => setRole('client')}
@@ -142,7 +128,6 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
               I am a Trainer / Creator
             </button>
           </div>
-        )}
 
         {/* Social Buttons */}
         <div className="space-y-3 mb-6">
@@ -181,22 +166,20 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {isSignUp && (
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-[#1a1c1c] dark:text-slate-200 mb-1.5">
-                Full Name
-              </label>
-              <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="John Doe"
-                required
-                className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-[#1a1c1c] dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-brand/20 focus:border-primary-brand dark:focus:border-indigo-400 transition-all rounded-xl"
-              />
-            </div>
-          )}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-[#1a1c1c] dark:text-slate-200 mb-1.5">
+              Full Name
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="John Doe"
+              required
+              className="w-full px-4 py-3 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-[#1a1c1c] dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-brand/20 focus:border-primary-brand dark:focus:border-indigo-400 transition-all rounded-xl"
+            />
+          </div>
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-[#1a1c1c] dark:text-slate-200 mb-1.5">
@@ -233,20 +216,9 @@ export default function AuthModal({ open, onClose }: AuthModalProps) {
             disabled={loading}
             className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-xl hover:shadow-lg transition-all focus:outline-none cursor-pointer disabled:opacity-50"
           >
-            {loading ? 'Processing...' : isSignUp ? 'Create Account' : 'Sign In'}
+            {loading ? 'Processing...' : 'Create Account'}
           </button>
         </form>
-
-        {/* Toggle */}
-        <p className="text-center text-sm text-[#5f5e5e] dark:text-slate-300 mt-6">
-          {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline focus:outline-none cursor-pointer"
-          >
-            {isSignUp ? 'Sign In' : 'Sign Up'}
-          </button>
-        </p>
       </div>
     </div>
   );

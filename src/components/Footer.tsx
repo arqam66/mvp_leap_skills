@@ -79,7 +79,6 @@ export default function Footer() {
             <nav className="flex flex-col gap-2.5 text-xs md:text-sm text-slate-600 dark:text-slate-400">
               <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Home</Link>
               <Link href="/explore" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Explore Mentors</Link>
-              <Link href="/login" className="hover:text-slate-900 dark:hover:text-white transition-colors focus-ring rounded">Login &amp; Join Role</Link>
             </nav>
           </div>
 
@@ -104,9 +103,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom Copyright */}
-        <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500 dark:text-slate-400">
+        <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex justify-center items-center text-xs text-slate-500 dark:text-slate-400">
           <p>&copy; {new Date().getFullYear()} Leap Skills Platform. All Rights Reserved.</p>
-          <p className="font-mono">Direct payouts. No platform hold periods.</p>
         </div>
       </div>
     </footer>

@@ -1,10 +1,41 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { createClient } from '../../../lib/supabase/server';
+import { withRateLimit } from '../../../lib/api-guard';
+
+const bookingSchema = z.object({
+  creatorId: z.string().min(1, 'creatorId is required'),
+  serviceId: z.string().min(1).optional(),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'date must be YYYY-MM-DD').optional(),
+  time: z.string().regex(/^\d{2}:\d{2}$/, 'time must be HH:MM').optional(),
+  clientName: z.string().min(2, 'Name must be at least 2 characters').max(100),
+  clientEmail: z.string().email('Invalid email address').max(200),
+  notes: z.string().max(2000).optional(),
+  format: z.enum(['one_on_one', 'webinar', 'paid_dm', 'async_review']).optional(),
+  dmQuestion: z.string().max(3000).optional(),
+});
 
 export async function POST(request: Request) {
+  const rateLimitError = withRateLimit(request, { limit: 20 });
+  if (rateLimitError) return rateLimitError;
+
   try {
-    const body = await request.json();
-    const { creatorId, serviceId, date, time, clientName, clientEmail, notes, format, dmQuestion } = body;
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+
+    const parsed = bookingSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    const { creatorId, serviceId, date, time, clientName, clientEmail, notes, format, dmQuestion } = parsed.data;
 
     const supabase = await createClient();
 
@@ -54,9 +85,11 @@ export async function POST(request: Request) {
         trainer_id: creatorId,
         client_id: clientId,
         service_id: serviceId,
+        scheduled_at: date && time ? `${date}T${time}:00` : undefined,
         format: format || 'one_on_one',
         status: 'confirmed',
         payment_status: 'paid',
+        notes,
         dm_thread_id: dmThreadId,
       })
       .select()

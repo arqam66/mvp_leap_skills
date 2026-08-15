@@ -78,7 +78,7 @@ export default function AboutPage() {
             onClick={() => nav.push('/login')}
             className="px-5 py-3 bg-[#3525cd] hover:bg-[#2b1cb5] dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white font-bold text-xs rounded-md shadow-sm transition-all active:scale-[0.98] shrink-0 cursor-pointer"
           >
-            Sign In &amp; Select Role
+            Sign Up
           </button>
         </div>
       </div>

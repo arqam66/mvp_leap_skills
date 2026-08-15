@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { z } from 'zod';
 import { createClient } from '../../../lib/supabase/server';
+import { withRateLimit } from '../../../lib/api-guard';
 
 function getStripe() {
   const stripeSecret = process.env.STRIPE_SECRET_KEY;
@@ -11,7 +13,15 @@ function getStripe() {
   });
 }
 
+const amountSchema = z
+  .number()
+  .positive('Amount must be greater than zero')
+  .max(1_000_000, 'Amount exceeds the maximum allowed');
+
 export async function POST(request: Request) {
+  const rateLimitError = withRateLimit(request, { limit: 10 });
+  if (rateLimitError) return rateLimitError;
+
   try {
     const stripe = getStripe();
     if (!stripe) {
@@ -97,6 +107,9 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const rateLimitError = withRateLimit(request, { limit: 10 });
+  if (rateLimitError) return rateLimitError;
+
   try {
     const stripe = getStripe();
     if (!stripe) {
@@ -110,7 +123,22 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { amount } = await request.json();
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+
+    const parsed = z.object({ amount: amountSchema }).safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    const { amount } = parsed.data;
 
     const { data: trainerProfile } = await supabase
       .from('trainer_profiles')

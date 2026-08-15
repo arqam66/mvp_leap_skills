@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '../../../lib/supabase/server';
+import { withRateLimit } from '../../../lib/api-guard';
 
 export async function GET(request: Request) {
+  const rateLimitError = withRateLimit(request, { limit: 60 });
+  if (rateLimitError) return rateLimitError;
+
   const { searchParams } = new URL(request.url);
   const trainerId = searchParams.get('trainer_id');
   const serviceId = searchParams.get('service_id');
@@ -9,6 +13,10 @@ export async function GET(request: Request) {
 
   if (!trainerId || !date) {
     return NextResponse.json({ error: 'trainer_id and date are required' }, { status: 400 });
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return NextResponse.json({ error: 'date must be in YYYY-MM-DD format' }, { status: 400 });
   }
 
   const supabase = await createClient();

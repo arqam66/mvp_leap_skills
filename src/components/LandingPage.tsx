@@ -31,14 +31,7 @@ export default function LandingPage() {
       <section className="border-b border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#0c101a] py-16 md:py-24 px-6 md:px-12">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-200 text-xs font-mono font-medium rounded-md border border-indigo-200 dark:border-indigo-800/60">
-              <span className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
-              <span>DIRECT STRIPE CONNECT INTEGRATION</span>
-              <span className="text-slate-400 dark:text-slate-600">&bull;</span>
-              <span className="text-slate-600 dark:text-slate-300">0% Commission on first $1,000</span>
-            </div>
-            
-            <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-950 dark:text-white tracking-tight leading-[1.06]">
+            <h1 className="font-headline text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-950 dark:text-white tracking-tight leading-[1.06]">
               Monetize your expertise. <br />
               Direct payouts, zero platform holds.
             </h1>
@@ -62,22 +55,6 @@ export default function LandingPage() {
               >
                 Explore Verified Mentors
               </button>
-            </div>
-
-            {/* Falsifiable Technical Specs */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-slate-200 dark:border-slate-800 max-w-lg">
-              <div>
-                <div className="font-mono text-2xl font-bold text-slate-950 dark:text-white">$1.4M+</div>
-                <div className="text-[11px] font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase mt-1">Stripe Direct Volume</div>
-              </div>
-              <div>
-                <div className="font-mono text-2xl font-bold text-slate-950 dark:text-white">0 sec</div>
-                <div className="text-[11px] font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase mt-1">Payout Delay</div>
-              </div>
-              <div>
-                <div className="font-mono text-2xl font-bold text-slate-950 dark:text-white">100%</div>
-                <div className="text-[11px] font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase mt-1">Audience Data Owned</div>
-              </div>
             </div>
           </div>
 

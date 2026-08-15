@@ -150,7 +150,7 @@ export default function Header() {
               onClick={() => router.push('/login')}
               className="text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 px-4 py-2 rounded-md transition-colors focus-ring cursor-pointer shadow-xs"
             >
-              Sign In / Login
+              Sign Up
             </button>
           ) : (
             <div className="flex items-center gap-2">
@@ -223,7 +223,7 @@ export default function Header() {
                 }}
                 className="text-left px-4 py-3 rounded-md text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors focus-ring cursor-pointer"
               >
-                Sign In / Login
+                Sign Up
               </button>
             ) : (
               <div className="flex flex-col gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
