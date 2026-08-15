@@ -12,6 +12,7 @@
   "dependencies": {
     "@clerk/nextjs": "^6.39.6",
     "@livekit/components-react": "^2.8.0",
+    "@livekit/components-styles": "^1.2.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.49.1",
     "@tanstack/react-query": "^5.67.2",
