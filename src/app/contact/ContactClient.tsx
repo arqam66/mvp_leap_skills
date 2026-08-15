@@ -139,7 +139,7 @@ export default function ContactClient() {
                 href="tel:03131203615"
               />
               <CopyableContact
-                icon="alternate_email"
+                icon="mail"
                 label="Email"
                 value="info@leapskills.sbs"
                 href="mailto:info@leapskills.sbs"

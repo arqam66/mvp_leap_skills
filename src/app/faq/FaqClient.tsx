@@ -49,6 +49,7 @@ const FAQ_ITEMS: FaqItem[] = [
 
 export default function FaqClient() {
   const router = useRouter();
+  const [openIndex, setOpenIndex] = React.useState<number | null>(0);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pt-[104px] pb-20 px-6">
@@ -62,33 +63,44 @@ export default function FaqClient() {
           </p>
         </div>
 
-        {/* FAQ Cards */}
+        {/* FAQ Dropdowns */}
         <div className="space-y-3">
-          {FAQ_ITEMS.map((faq) => (
-            <div
-              key={faq.question}
-              className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm"
-              itemScope
-              itemType="https://schema.org/Question"
-            >
-              <div className="px-6 py-4.5 flex items-start gap-3">
-                <span className="material-symbols-outlined text-indigo-500 dark:text-indigo-400 text-[20px] shrink-0 mt-0.5">
-                  help
-                </span>
-                <h2 className="font-headline font-semibold text-sm text-slate-950 dark:text-slate-100 pr-4" itemProp="name">
-                  {faq.question}
-                </h2>
-              </div>
+          {FAQ_ITEMS.map((faq, index) => {
+            const isOpen = openIndex === index;
+            return (
               <div
-                className="px-6 pb-5 pt-0 text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-sans"
+                key={faq.question}
+                className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 rounded-2xl overflow-hidden shadow-sm"
                 itemScope
-                itemType="https://schema.org/Answer"
-                itemProp="acceptedAnswer"
+                itemType="https://schema.org/Question"
               >
-                <span itemProp="text">{faq.answer}</span>
+                <button
+                  type="button"
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  className="w-full px-6 py-4.5 flex items-center justify-between text-left font-semibold text-sm transition-all cursor-pointer text-slate-950 dark:text-slate-100"
+                  aria-expanded={isOpen}
+                >
+                  <span className="font-headline pr-4" itemProp="name">{faq.question}</span>
+                  <span
+                    className="material-symbols-outlined text-slate-400 transition-transform duration-200 shrink-0"
+                    style={{ transform: isOpen ? 'rotate(-180deg)' : 'none' }}
+                  >
+                    keyboard_arrow_down
+                  </span>
+                </button>
+                {isOpen && (
+                  <div
+                    className="px-6 pb-5 pt-4 text-xs md:text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-sans border-t border-slate-100 dark:border-slate-800"
+                    itemScope
+                    itemType="https://schema.org/Answer"
+                    itemProp="acceptedAnswer"
+                  >
+                    <span itemProp="text">{faq.answer}</span>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Dynamic Help CTA */}
