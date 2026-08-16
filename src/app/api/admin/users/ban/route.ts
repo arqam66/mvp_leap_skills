@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createClient } from '../../../../../lib/supabase/server';
-import { withRateLimit } from '../../../../../lib/api-guard';
+import { createClient } from '@/lib/supabase/server';
+import { withRateLimit } from '@/lib/api-guard';
 
 const banSchema = z.object({
   userId: z.string().min(1, 'userId is required').max(100),
