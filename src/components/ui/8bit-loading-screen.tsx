@@ -11,7 +11,6 @@ const DEFAULT_TIPS = [
 ];
 
 export interface LoadingScreenProps {
-  title?: string;
   tips?: string[];
   autoProgressDuration?: number;
   className?: string;
@@ -20,7 +19,6 @@ export interface LoadingScreenProps {
 }
 
 export default function LoadingScreen({
-  title = "Leap Skills",
   tips = DEFAULT_TIPS,
   autoProgressDuration = 1500,
   className = "",
@@ -95,15 +93,10 @@ export default function LoadingScreen({
           <div className="w-2 h-2 rounded-full bg-indigo-300 pulse-glow" />
         </div>
 
-        {/* Title wordmark */}
-        <div className="text-center space-y-2.5">
-          <h2 className="font-headline text-[26px] sm:text-3xl font-extrabold tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
-            {title}
-          </h2>
-          <p className="text-[10px] font-mono font-semibold tracking-[0.35em] text-slate-500 uppercase">
-            Experience
-          </p>
-        </div>
+        {/* Subtle eyebrow */}
+        <p className="text-[10px] font-mono font-semibold tracking-[0.35em] text-slate-500 uppercase">
+          Experience
+        </p>
 
         {/* Premium progress bar */}
         <div className="w-full space-y-3">

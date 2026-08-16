@@ -121,9 +121,23 @@ test.describe('LeapSkills App', () => {
     await page.goto('/demo');
     await expect(page.locator('text=LOADING')).toBeVisible();
     await expect(page.locator('text=EXPERIENCE')).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Leap Skills' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Leap Skills' })).toHaveCount(0);
     await expect(page.locator('.spin-slow')).toBeVisible();
     await expect(page.locator('div.w-14')).toHaveCount(0);
     await expect(page.locator('text=100%')).toBeVisible({ timeout: 15000 });
+  });
+
+  test('fingerprint badge shows device id on landing page', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByTestId('visitor-id-badge')).toHaveText(/^[0-9a-f]{32}$/, { timeout: 20000 });
+  });
+
+  test('fingerprint badge shows on every page', async ({ page }) => {
+    await page.goto('/explore');
+    await expect(page.locator('text=Fingerprint')).toBeVisible();
+    await expect(page.getByTestId('visitor-id-badge')).toHaveText(/^[0-9a-f]{32}$/, { timeout: 20000 });
+
+    await page.goto('/about');
+    await expect(page.getByTestId('visitor-id-badge')).toHaveText(/^[0-9a-f]{32}$/, { timeout: 20000 });
   });
 });
