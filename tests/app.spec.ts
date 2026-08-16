@@ -123,7 +123,7 @@ test.describe('LeapSkills App', () => {
     await expect(page.getByRole('progressbar')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Leap Skills' })).toHaveCount(0);
     await expect(page.locator('div.w-14')).toHaveCount(0);
-    await expect(page.locator('text=100%')).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('text=100%')).toBeVisible({ timeout: 20000 });
   });
 
   test('fingerprint is recorded silently on landing page (no visible badge)', async ({ page }) => {

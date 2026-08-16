@@ -10,7 +10,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1500);
+    const timer = setTimeout(() => setLoading(false), 4000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -19,7 +19,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <LoadingScreen
         variant="fullscreen"
         autoProgress
-        autoProgressDuration={3000}
+        autoProgressDuration={4000}
       />
     );
   }

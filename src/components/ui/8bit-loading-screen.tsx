@@ -79,38 +79,93 @@ export default function LoadingScreen({
 
   const isFullscreen = variant === "fullscreen";
   const displayProgress = autoProgress ? internalProgress : progress;
+  const isDone = displayProgress >= 100;
 
   const content = (
-    <div className="flex flex-col items-center justify-center gap-6 p-8">
+    <div className="relative flex flex-col items-center justify-center gap-8 p-8">
+      {/* Pixel corner brackets */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 hidden md:block">
+        <span className="absolute -left-2 -top-2 h-6 w-6 border-l-4 border-t-4 border-primary/60" />
+        <span className="absolute -right-2 -top-2 h-6 w-6 border-r-4 border-t-4 border-primary/60" />
+        <span className="absolute -bottom-2 -left-2 h-6 w-6 border-b-4 border-l-4 border-primary/60" />
+        <span className="absolute -bottom-2 -right-2 h-6 w-6 border-b-4 border-r-4 border-primary/60" />
+      </div>
+
       {/* Title */}
-      <h2
-        className={cn(
-          "retro text-xl md:text-2xl text-center",
-          "animate-pulse"
-        )}
-      >
-        {title}
-      </h2>
+      <div className="flex flex-col items-center gap-2">
+        <h2
+          className={cn(
+            "retro text-2xl md:text-3xl text-center tracking-[0.25em] text-foreground",
+            isDone ? "animate-none" : "animate-pulse"
+          )}
+        >
+          {title}
+          <span
+            className={cn(
+              "ml-1 inline-block text-primary",
+              showCursor ? "opacity-100" : "opacity-0"
+            )}
+          >
+            ▮
+          </span>
+        </h2>
+        <span
+          className={cn(
+            "retro text-[0.625rem] tracking-[0.4em] text-muted-foreground",
+            isDone ? "text-primary" : "animate-pulse"
+          )}
+        >
+          {isDone ? "COMPLETE" : "PLEASE WAIT"}
+        </span>
+      </div>
+
       {/* Progress section */}
       <div className="w-full max-w-md space-y-2">
         {showPercentage && (
           <div className="flex justify-end">
-            <span className="retro text-xs text-muted-foreground">
+            <span
+              className={cn(
+                "retro text-xs text-muted-foreground tabular-nums",
+                isDone && "text-primary"
+              )}
+            >
               {Math.round(displayProgress)}%
             </span>
           </div>
         )}
-        <Progress
-          value={displayProgress}
-          variant="retro"
-          progressBg="bg-primary"
-          className="h-4"
-        />
+        <div
+          className={cn(
+            "rounded-sm border-2 p-1.5",
+            isDone
+              ? "border-primary/50 bg-primary/5"
+              : "border-foreground/10 bg-muted"
+          )}
+        >
+          <Progress
+            value={displayProgress}
+            variant="retro"
+            progressBg="bg-primary"
+            className="h-4"
+          />
+        </div>
+        <div
+          aria-hidden
+          className="flex justify-between px-1 pt-1 text-[0.5rem] leading-none text-muted-foreground/60"
+        >
+          {Array.from({ length: 11 }).map((_, i) => (
+            <span key={i}>▮</span>
+          ))}
+        </div>
       </div>
+
       {/* Tips section */}
       {tips.length > 0 && (
         <div className="w-full max-w-md min-h-16 flex items-center justify-center">
-          <p className="retro text-[0.625rem] md:text-xs text-center text-muted-foreground leading-relaxed animate-pulse">
+          <p
+            key={currentTipIndex}
+            className="retro text-[0.625rem] md:text-xs text-center text-muted-foreground leading-relaxed animate-pulse"
+          >
+            <span className="text-primary">▸ </span>
             {tips[currentTipIndex]}
           </p>
         </div>
@@ -122,13 +177,31 @@ export default function LoadingScreen({
     return (
       <div
         className={cn(
-          "fixed inset-0 z-50 flex items-center justify-center",
+          "fixed inset-0 z-50 flex items-center justify-center overflow-hidden",
           "bg-background",
           className
         )}
         {...props}
       >
-        <div className="w-full max-w-lg px-4">{content}</div>
+        {/* CRT scanlines */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(0deg, rgba(0,0,0,0.8) 0px, rgba(0,0,0,0.8) 1px, transparent 1px, transparent 3px)",
+          }}
+        />
+        {/* Vignette */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 55%, rgba(0,0,0,0.22))",
+          }}
+        />
+        <div className="relative z-10 w-full max-w-lg px-4">{content}</div>
       </div>
     );
   }
