@@ -17,7 +17,14 @@ export default function FingerprintProvider({ children }: { children: React.Reac
     FingerprintJS.load()
       .then((fp) => fp.get())
       .then(({ visitorId }) => {
-        if (!cancelled) setVisitorId(visitorId);
+        if (cancelled) return;
+        setVisitorId(visitorId);
+        try {
+          localStorage.setItem('leap_fingerprint', JSON.stringify({ visitorId, ts: Date.now() }));
+        } catch {
+          // ignore storage failures
+        }
+        console.log('[FingerprintJS] visitorId:', visitorId);
       })
       .catch(() => {
         if (!cancelled) setVisitorId(null);

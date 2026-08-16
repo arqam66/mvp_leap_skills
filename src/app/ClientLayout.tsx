@@ -5,7 +5,6 @@ import LoadingScreen from '../components/ui/8bit-loading-screen';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import FingerprintProvider from '../components/providers/FingerprintProvider';
-import FingerprintBadge from '../components/ui/FingerprintBadge';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
@@ -30,7 +29,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <Header />
       {children}
       <Footer />
-      <FingerprintBadge />
     </FingerprintProvider>
   );
 }

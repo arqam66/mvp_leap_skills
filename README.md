@@ -39,7 +39,7 @@ Powered strictly by **MongoDB Atlas** for high-throughput data persistence, the 
 ## ⚡ Feature Highlights
 
 - **Instant Live Demo** — deployed continuously to Vercel at [leapskills.vercel.app](https://leapskills.vercel.app/).
-- **Global Device Fingerprinting** — every page computes a stable FingerprintJS visitor ID shown in a fixed badge.
+- **Global Device Fingerprinting** — every page computes a stable FingerprintJS visitor ID, recorded silently to localStorage and console (no visible UI).
 - **Premium Loading Experience** — logo-free, fullscreen retro-arcade loader with progress bar (max 3s).
 - **Dark/Light Mode** — theme toggle persisted across sessions.
 - **Enterprise Security** — Clerk auth, API rate limiting, CORS guard, and admin ban controls.
@@ -140,7 +140,7 @@ Integrated via [`src/lib/notifications.ts`](src/lib/notifications.ts):
 
 ### 🆔 7. Global Device Fingerprinting (FingerprintJS)
 - **Cross-Page Visitor ID**: A single `FingerprintProvider` (React context) loads FingerprintJS once and exposes a stable `visitorId` to the whole app.
-- **Persistent Badge**: A fixed bottom-left badge (`FingerprintBadge`) shows the 32-char device fingerprint on **every page** — landing, explore, profiles, admin, and meeting rooms.
+- **Silent Recording**: The visitor ID is never shown in the UI — it is stored in `localStorage` (`leap_fingerprint`) and logged to the browser console on every page.
 - **Zero-Bundle Bloat**: Loaded client-side only after hydration, cached and reused across route changes.
 
 ---
@@ -229,7 +229,7 @@ Integrated via [`src/lib/notifications.ts`](src/lib/notifications.ts):
 │   │   ├── providers/      # FingerprintProvider (global visitor ID context)
 │   │   ├── services/       # BookingDrawer, ServiceCard, InlineCheckout
 │   │   ├── seo/            # Dynamic JSON-LD structured data
-│   │   ├── ui/             # FingerprintBadge, loading screens, buttons
+│   │   ├── ui/             # Loading screens, buttons
 │   │   └── Header.tsx      # Global navigation header
 │   ├── hooks/              # useTrainerDashboard & data hooks
 │   ├── lib/                # Core Library Modules
