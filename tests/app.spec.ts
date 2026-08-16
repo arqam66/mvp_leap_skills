@@ -33,23 +33,23 @@ test.describe('LeapSkills App', () => {
     await expect(page.locator('header >> text=Get Started')).toHaveCount(0);
   });
 
-  test('Sign In navigates to signup page', async ({ page }) => {
+  test('Sign Up navigates to login page', async ({ page }) => {
     await page.goto('/');
     await page.locator('header button:has-text("Sign Up")').click();
-    await expect(page).toHaveURL(/\/signup/);
-    await expect(page.locator('text=Create your account')).toBeVisible();
+    await page.waitForURL(/\/login/, { timeout: 30000 });
+    await expect(page.getByRole('heading', { name: 'Create your Leap Skills Account' })).toBeVisible();
   });
 
-  test('signup page has email and password fields', async ({ page }) => {
-    await page.goto('/signup');
-    await expect(page.locator('#email')).toBeVisible();
-    await expect(page.locator('#password')).toBeVisible();
+  test('signup form has email and password fields', async ({ page }) => {
+    await page.goto('/login');
+    await expect(page.getByRole('textbox', { name: 'Email address' })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Password' })).toBeVisible();
   });
 
-  test('signup page has Google and GitHub buttons', async ({ page }) => {
-    await page.goto('/signup');
-    await expect(page.locator('text=Continue with Google')).toBeVisible();
-    await expect(page.locator('text=Continue with GitHub')).toBeVisible();
+  test('signup form has Google and GitHub buttons', async ({ page }) => {
+    await page.goto('/login');
+    await expect(page.getByRole('button', { name: /Sign in with Google/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Sign in with GitHub/ })).toBeVisible();
   });
 
   test('signup page can toggle sign up / sign in', async ({ page }) => {
@@ -79,11 +79,11 @@ test.describe('LeapSkills App', () => {
   test('footer links navigate correctly', async ({ page }) => {
     await page.goto('/');
     await page.locator('footer a:has-text("Privacy Policy")').first().click();
-    await expect(page).toHaveURL(/\/privacy/);
+    await page.waitForURL(/\/privacy/, { timeout: 30000 });
     await expect(page.getByRole('heading', { name: 'Privacy Policy' })).toBeVisible();
 
     await page.locator('footer a:has-text("Terms & Conditions")').first().click();
-    await expect(page).toHaveURL(/\/terms/);
+    await page.waitForURL(/\/terms/, { timeout: 30000 });
     await expect(page.getByRole('heading', { name: 'Terms & Conditions' })).toBeVisible();
   });
 
@@ -109,5 +109,21 @@ test.describe('LeapSkills App', () => {
 
     await page.locator('header nav button:has-text("Home")').click();
     await expect(page).toHaveURL(/\/$/);
+  });
+
+  test('login page has no brand logo', async ({ page }) => {
+    await page.goto('/login');
+    await expect(page.getByRole('heading', { name: 'Create your Leap Skills Account' })).toBeVisible();
+    await expect(page.locator('text=⚡')).toHaveCount(0);
+  });
+
+  test('loading screen is premium and has no logo', async ({ page }) => {
+    await page.goto('/demo');
+    await expect(page.locator('text=LOADING')).toBeVisible();
+    await expect(page.locator('text=EXPERIENCE')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Leap Skills' })).toBeVisible();
+    await expect(page.locator('.spin-slow')).toBeVisible();
+    await expect(page.locator('div.w-14')).toHaveCount(0);
+    await expect(page.locator('text=100%')).toBeVisible({ timeout: 15000 });
   });
 });

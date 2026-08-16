@@ -8,5 +8,5 @@ coverage/
 .env*
 !.env.example
 strix/
-t e s t - r e s u l t s /  
+test-results/
 .vercel
