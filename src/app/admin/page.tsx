@@ -17,6 +17,7 @@ interface UserRow {
   full_name: string | null;
   role: string;
   created_at: string;
+  banned?: boolean | null;
 }
 
 interface BookingRow {
@@ -40,12 +41,35 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [platformFee, setPlatformFee] = useState('10');
 
+  const handleToggleBan = async (u: UserRow) => {
+    const nextBanned = !u.banned;
+    const action = window.confirm(
+      nextBanned
+        ? `Ban ${u.full_name || u.email}? They will no longer be able to use the platform.`
+        : `Unban ${u.full_name || u.email}?`
+    );
+    if (!action) return;
+
+    try {
+      const res = await fetch('/api/admin/users/ban', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: u.id, banned: nextBanned }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update user status');
+      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, banned: nextBanned } : x)));
+    } catch (err: any) {
+      alert(err.message || 'Failed to update user status');
+    }
+  };
+
   useEffect(() => {
     async function loadData() {
       setLoading(true);
       try {
         const [usersRes, bookingsRes, transactionsRes] = await Promise.all([
-          supabase.from('users').select('id, email, full_name, role, created_at').order('created_at', { ascending: false }).limit(100),
+          supabase.from('users').select('id, email, full_name, role, created_at, banned').order('created_at', { ascending: false }).limit(100),
           supabase.from('bookings').select('id, status, payment_status, created_at, trainer_id, client_id').order('created_at', { ascending: false }).limit(100),
           supabase.from('transactions').select('gross_amount, platform_fee, trainer_payout, payout_status'),
         ]);
@@ -200,7 +224,9 @@ export default function AdminPage() {
                       <th className="text-left p-4 font-medium">Name</th>
                       <th className="text-left p-4 font-medium">Email</th>
                       <th className="text-left p-4 font-medium">Role</th>
+                      <th className="text-left p-4 font-medium">Status</th>
                       <th className="text-left p-4 font-medium">Joined</th>
+                      <th className="text-right p-4 font-medium">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -217,7 +243,30 @@ export default function AdminPage() {
                             {u.role}
                           </span>
                         </td>
+                        <td className="p-4">
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                            u.banned
+                              ? 'bg-red-500/15 text-red-400 border border-red-700/40'
+                              : 'bg-emerald-500/10 text-emerald-400'
+                          }`}>
+                            {u.banned ? 'Banned' : 'Active'}
+                          </span>
+                        </td>
                         <td className="p-4 text-slate-500 text-xs">{new Date(u.created_at).toLocaleDateString()}</td>
+                        <td className="p-4 text-right">
+                          {u.role !== 'admin' && (
+                            <button
+                              onClick={() => handleToggleBan(u)}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                                u.banned
+                                  ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-700/40 hover:bg-emerald-600/30'
+                                  : 'bg-red-600/20 text-red-400 border border-red-700/40 hover:bg-red-600/30'
+                              }`}
+                            >
+                              {u.banned ? 'Unban' : 'Ban'}
+                            </button>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

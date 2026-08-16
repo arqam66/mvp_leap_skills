@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useAppStore } from '../store/app';
 import { Creator, Service } from '../types';
 import { CREATORS, CREATOR_SERVICES } from '../data/creators';
+import { wsBookingService } from '../lib/websocket';
 import ServiceCard from './services/ServiceCard';
 import BookingDrawer from './services/BookingDrawer';
-import InlineCheckout from './checkout/InlineCheckout';
 
 interface ProfilePageProps {
   slug: string;
@@ -21,13 +21,25 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
   const services = creator ? (CREATOR_SERVICES[creator.id] || []) : [];
 
   const [activeDrawerService, setActiveDrawerService] = useState<Service | null>(null);
-  const [checkoutService, setCheckoutService] = useState<Service | null>(null);
-  const [bookingDetails, setBookingDetails] = useState<any>(null);
   const [confirmedBookingId, setConfirmedBookingId] = useState<string | null>(null);
+  const [confirmedDetails, setConfirmedDetails] = useState<any>(null);
+  const [isBooking, setIsBooking] = useState(false);
+  const [bookingError, setBookingError] = useState<string | null>(null);
 
   useEffect(() => {
     if (creator) setSelectedCreator(creator);
   }, [creator, setSelectedCreator]);
+
+  useEffect(() => {
+    wsBookingService.connect();
+    const unsub = wsBookingService.subscribeMessage((payload) => {
+      if (payload.type === 'BOOKING_CONFIRMED' && payload.id) {
+        setConfirmedBookingId((prev) => prev || payload.id || '');
+        setIsBooking(false);
+      }
+    });
+    return () => unsub();
+  }, []);
 
   if (!creator) {
     return (
@@ -38,15 +50,55 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
     );
   }
 
-  const handleProceedToCheckout = (details: any) => {
-    setBookingDetails(details);
-    setCheckoutService(details.service);
-    setActiveDrawerService(null);
+  const handleConfirmBooking = async (details: any) => {
+    setIsBooking(true);
+    setBookingError(null);
+    setConfirmedDetails(details);
+
+    // 1. Broadcast booking over the real-time WebSocket network
+    wsBookingService.sendBookingRequest({
+      creatorId: creator.id,
+      creatorName: creator.name,
+      serviceTitle: details.service.title,
+      clientName: details.clientName,
+      clientEmail: details.clientEmail,
+      date: details.date || '',
+      time: details.time || '',
+    });
+
+    // 2. Persist booking to the backend
+    try {
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          creatorId: creator.id,
+          serviceId: details.service.id,
+          date: details.date,
+          time: details.time,
+          clientName: details.clientName,
+          clientEmail: details.clientEmail,
+          notes: details.notes,
+          format: details.service.format || details.service.type || 'one_on_one',
+          dmQuestion: details.dmQuestion,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save booking');
+
+      setConfirmedBookingId(data.booking?.id || `bk_${Math.random().toString(36).substring(2, 9)}`);
+      setActiveDrawerService(null);
+    } catch (err: any) {
+      setBookingError(err.message || 'Booking failed. Please try again.');
+      setIsBooking(false);
+    }
   };
 
-  const handlePaymentSuccess = (bookingId: string) => {
-    setConfirmedBookingId(bookingId);
-    setCheckoutService(null);
+  const handleJoinMeeting = () => {
+    if (confirmedBookingId) {
+      router.push(`/meeting/${confirmedBookingId}`);
+    }
   };
 
   return (
@@ -80,7 +132,7 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
                 </span>
               )}
               <span className="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-xs font-bold px-3 py-1 rounded-full uppercase">
-                ⚡ Instant Payouts Enabled
+                ⚡ Real-Time Booking Enabled
               </span>
             </div>
 
@@ -104,14 +156,34 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
         <div className="mb-10 p-6 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/80 rounded-3xl text-emerald-900 dark:text-emerald-200 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="font-bold text-lg">🎉 Booking Confirmed! ID: {confirmedBookingId}</h3>
-            <p className="text-sm text-emerald-700 dark:text-emerald-300">Confirmation email & calendar invitation sent. The creator payout has been triggered on the instant rail.</p>
+            <p className="text-sm text-emerald-700 dark:text-emerald-300">
+              Confirmed in real-time over the WebSocket network.
+              {confirmedDetails?.date ? ` Your 1:1 session is scheduled for ${confirmedDetails.date} @ ${confirmedDetails.time}.` : ''}
+              A WebRTC meeting room has been auto-generated.
+            </p>
+            {bookingError && <p className="text-xs text-rose-600 mt-1">{bookingError}</p>}
           </div>
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="px-6 py-3 bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-emerald-500 transition-all shrink-0 cursor-pointer"
-          >
-            View in Dashboard &rarr;
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+            <button
+              onClick={handleJoinMeeting}
+              className="px-6 py-3 bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-emerald-500 transition-all cursor-pointer"
+            >
+              Join Video Meeting &rarr;
+            </button>
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="px-6 py-3 bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-emerald-50 dark:hover:bg-slate-700 transition-all border border-emerald-200 dark:border-emerald-800 cursor-pointer"
+            >
+              View in Dashboard &rarr;
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isBooking && (
+        <div className="mb-10 p-4 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 rounded-2xl text-indigo-700 dark:text-indigo-300 text-sm font-semibold flex items-center gap-3">
+          <span className="w-4 h-4 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
+          Booking your 1:1 session over the real-time network...
         </div>
       )}
 
@@ -140,21 +212,8 @@ export default function ProfilePage({ slug }: ProfilePageProps) {
         service={activeDrawerService}
         creator={creator}
         onClose={() => setActiveDrawerService(null)}
-        onProceedToCheckout={handleProceedToCheckout}
+        onConfirmBooking={handleConfirmBooking}
       />
-
-      {/* Inline Checkout Modal */}
-      {checkoutService && bookingDetails && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <InlineCheckout
-            service={checkoutService}
-            creator={creator}
-            bookingDetails={bookingDetails}
-            onSuccess={handlePaymentSuccess}
-            onCancel={() => setCheckoutService(null)}
-          />
-        </div>
-      )}
     </div>
   );
 }

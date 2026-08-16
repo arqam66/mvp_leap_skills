@@ -6,7 +6,6 @@ import { z } from 'zod';
 const contactSchema = z.object({
   name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
   email: z.string().trim().email('Please enter a valid email address').max(200, 'Email is too long'),
-  subject: z.enum(['general', 'billing', 'booking', 'customization']),
   message: z
     .string()
     .trim()
@@ -86,14 +85,13 @@ const inputClasses =
 export default function ContactClient() {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
-  const [subject, setSubject] = React.useState('general');
   const [message, setMessage] = React.useState('');
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const [errors, setErrors] = React.useState<FormErrors>({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const result = contactSchema.safeParse({ name, email, subject, message });
+    const result = contactSchema.safeParse({ name, email, message });
     if (!result.success) {
       const fieldErrors: FormErrors = {};
       for (const issue of result.error.issues) {
@@ -226,20 +224,6 @@ export default function ContactClient() {
                     />
                     {errors.email && <p className="text-[11px] font-semibold text-red-500">{errors.email}</p>}
                   </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Topic</label>
-                  <select
-                    value={subject}
-                    onChange={(e) => setSubject(e.target.value)}
-                    className={inputClasses}
-                  >
-                    <option value="general">General Inquiry</option>
-                    <option value="billing">Payout &amp; Billing Issues</option>
-                    <option value="booking">Booking / Scheduling Errors</option>
-                    <option value="customization">Storefront Customization Help</option>
-                  </select>
                 </div>
 
                 <div className="space-y-1.5">

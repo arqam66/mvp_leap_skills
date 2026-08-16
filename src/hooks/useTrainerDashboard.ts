@@ -11,6 +11,7 @@ interface TrainerDashboardData {
     bio: string | null;
     avatar_url: string | null;
     stripe_account_id: string | null;
+    banned: boolean | null;
   } | null;
   services: Array<{
     id: string;
@@ -45,6 +46,7 @@ interface TrainerDashboardData {
   }>;
   loading: boolean;
   error: string | null;
+  banned: boolean;
   refetch: () => void;
 }
 
@@ -58,6 +60,7 @@ export function useTrainerDashboard(): TrainerDashboardData {
     paidDMs: [],
     loading: true,
     error: null,
+    banned: false,
   });
   const [tick, setTick] = useState(0);
 
@@ -75,7 +78,7 @@ export function useTrainerDashboard(): TrainerDashboardData {
         // Load profile
         const { data: profile } = await supabase
           .from('trainer_profiles')
-          .select('id, full_name, profile_slug, bio, avatar_url, stripe_account_id')
+          .select('id, full_name, profile_slug, bio, avatar_url, stripe_account_id, banned')
           .eq('user_id', user.id)
           .single();
 
@@ -125,6 +128,7 @@ export function useTrainerDashboard(): TrainerDashboardData {
           paidDMs: paidDMs || [],
           loading: false,
           error: null,
+          banned: profile?.banned === true,
         });
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Unknown error';

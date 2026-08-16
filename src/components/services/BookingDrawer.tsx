@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Service, Creator, ServiceFormat } from '../../types';
 import { getDateOptions, getFutureDate } from '../../utils/dates';
-import { formatPKR } from '../../utils/currency';
+import { wsBookingService } from '../../lib/websocket';
 
 interface BookingDrawerProps {
   service: Service | null;
   creator: Creator;
   onClose: () => void;
-  onProceedToCheckout: (details: {
+  onConfirmBooking: (details: {
     service: Service;
     date?: string;
     time?: string;
@@ -25,7 +25,7 @@ export default function BookingDrawer({
   service,
   creator,
   onClose,
-  onProceedToCheckout,
+  onConfirmBooking,
 }: BookingDrawerProps) {
   const { user } = useUser();
   if (!service) return null;
@@ -39,6 +39,13 @@ export default function BookingDrawer({
   const [clientEmail, setClientEmail] = useState(user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress || '');
   const [notes, setNotes] = useState('');
   const [dmQuestion, setDmQuestion] = useState('');
+  const [wsConnected, setWsConnected] = useState(false);
+
+  useEffect(() => {
+    wsBookingService.connect();
+    const unsubStatus = wsBookingService.subscribeStatus(setWsConnected);
+    return () => unsubStatus();
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -54,7 +61,7 @@ export default function BookingDrawer({
     e.preventDefault();
     if (!clientName || !clientEmail) return;
 
-    onProceedToCheckout({
+    onConfirmBooking({
       service,
       date: format === 'paid_dm' ? undefined : selectedDate,
       time: format === 'paid_dm' ? undefined : selectedTime,
@@ -197,13 +204,17 @@ export default function BookingDrawer({
               type="submit"
               className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg cursor-pointer"
             >
-              Proceed to Inline Checkout ({formatPKR(service.price)}) &rarr;
+              Confirm 1:1 Session Booking &rarr;
             </button>
           </form>
         </div>
 
         <div className="pt-6 text-center text-xs text-slate-400 border-t border-slate-100 dark:border-slate-800">
-          🔒 Secure 256-bit encrypted inline checkout &bull; Instant confirmation
+          <div className="flex items-center justify-center gap-1.5 mb-1">
+            <span className={`w-1.5 h-1.5 rounded-full ${wsConnected ? 'bg-emerald-500' : 'bg-amber-500'} animate-pulse`} />
+            Real-Time WebSocket Booking Network {wsConnected ? 'Connected' : 'Connecting...'}
+          </div>
+          Instant confirmation &amp; auto-generated WebRTC meeting room
         </div>
       </div>
     </div>

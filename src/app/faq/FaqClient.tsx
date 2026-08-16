@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 
 interface FaqItem {
   question: string;
@@ -48,8 +47,7 @@ const FAQ_ITEMS: FaqItem[] = [
 ];
 
 export default function FaqClient() {
-  const router = useRouter();
-  const [openIndex, setOpenIndex] = React.useState<number | null>(0);
+  const [openIndex, setOpenIndex] = React.useState<number | null>(null);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 pt-[104px] pb-20 px-6">
@@ -101,22 +99,6 @@ export default function FaqClient() {
               </div>
             );
           })}
-        </div>
-
-        {/* Dynamic Help CTA */}
-        <div className="p-6 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-100/50 dark:border-indigo-900/40 text-center space-y-3 max-w-lg mx-auto">
-          <h4 className="font-headline text-sm font-bold text-indigo-950 dark:text-indigo-200">
-            Still have questions? We are here to help
-          </h4>
-          <p className="text-xs text-indigo-850 dark:text-indigo-300 leading-relaxed font-sans max-w-sm mx-auto">
-            If you could not find the answer in our documentation, open a support ticket to talk to our engineers.
-          </p>
-          <button
-            onClick={() => router.push('/contact')}
-            className="px-5 py-2.5 bg-indigo-650 hover:bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer"
-          >
-            Open Support Ticket
-          </button>
         </div>
       </div>
     </div>

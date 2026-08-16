@@ -184,6 +184,11 @@ export default function Dashboard() {
         </div>
 
         <div className="pt-6 border-t border-slate-800 space-y-3">
+          <div className="p-3 bg-slate-800/60 rounded-xl space-y-1">
+            <div className="text-[11px] text-slate-400">Signed in as</div>
+            <div className="font-bold text-sm text-white truncate">{clerkUser?.fullName || 'Guest'}</div>
+            <div className="font-mono text-[11px] text-indigo-400 truncate">{userEmail || '—'}</div>
+          </div>
           <div className="p-3 bg-slate-800/60 rounded-xl text-xs space-y-1">
             <div className="text-slate-400">Shareable Profile URL</div>
             <div className="font-mono text-indigo-400 font-bold truncate">creatorhub.pro/{selectedCreator.id}</div>
@@ -205,7 +210,7 @@ export default function Dashboard() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className="font-headline text-3xl font-extrabold tracking-tight">
-                  Welcome back, {selectedCreator.name} 👋
+                  Welcome back, {clerkUser?.fullName || selectedCreator.name} 👋
                 </h1>
                 <p className="text-sm text-slate-500 mt-1">
                   Here is your single-link performance overview for today.
