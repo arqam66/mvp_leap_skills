@@ -139,7 +139,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* Global JSON-LD structured data — SEO + GEO + AEO */}
           <JsonLd />
         </head>
-        <body className="bg-[#fafafa] dark:bg-[#080c14] text-slate-900 dark:text-slate-100 antialiased font-sans min-h-screen flex flex-col transition-colors duration-200">
+        <body suppressHydrationWarning className="bg-[#fafafa] dark:bg-[#080c14] text-slate-900 dark:text-slate-100 antialiased font-sans min-h-screen flex flex-col transition-colors duration-200">
           <QueryProvider>
             <ClientLayout>{children}</ClientLayout>
           </QueryProvider>
