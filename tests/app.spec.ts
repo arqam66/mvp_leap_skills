@@ -117,12 +117,11 @@ test.describe('LeapSkills App', () => {
     await expect(page.locator('text=⚡')).toHaveCount(0);
   });
 
-  test('loading screen is premium and has no logo', async ({ page }) => {
+  test('loading screen is retro 8-bit and has no logo', async ({ page }) => {
     await page.goto('/demo');
     await expect(page.locator('text=LOADING')).toBeVisible();
-    await expect(page.locator('text=EXPERIENCE')).toBeVisible();
+    await expect(page.getByRole('progressbar')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Leap Skills' })).toHaveCount(0);
-    await expect(page.locator('.spin-slow')).toBeVisible();
     await expect(page.locator('div.w-14')).toHaveCount(0);
     await expect(page.locator('text=100%')).toBeVisible({ timeout: 15000 });
   });

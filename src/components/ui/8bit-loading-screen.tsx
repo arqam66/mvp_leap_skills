@@ -1,159 +1,141 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/8bit-progress";
 
 const DEFAULT_TIPS = [
-  'Connecting to verified technical mentors...',
-  'Preparing direct Stripe Connect payout channel...',
-  'Fetching verified availability and session schedules...',
-  'Initializing WebRTC direct video conference room...',
-  'Loading creator storefront configuration...'
+  "Press any key to continue...",
+  "Did you know? Saving often prevents lost progress!",
+  "Tip: Explore every corner for hidden treasures.",
+  "Remember to take breaks during long gaming sessions!",
+  "Pro tip: Read the manual for secret moves.",
 ];
 
-export interface LoadingScreenProps {
+export interface LoadingScreenProps extends React.ComponentProps<"div"> {
+  title?: string;
   tips?: string[];
-  autoProgressDuration?: number;
-  className?: string;
-  variant?: 'default' | 'fullscreen';
+  progress?: number;
+  showPercentage?: boolean;
+  tipInterval?: number;
+  variant?: "default" | "fullscreen";
   autoProgress?: boolean;
+  autoProgressDuration?: number;
 }
 
 export default function LoadingScreen({
+  className,
+  title = "LOADING",
   tips = DEFAULT_TIPS,
-  autoProgressDuration = 1500,
-  className = "",
+  progress = 0,
+  showPercentage = true,
+  tipInterval = 3000,
   variant = "default",
-  autoProgress = true,
+  autoProgress = false,
+  autoProgressDuration = 5000,
+  ...props
 }: LoadingScreenProps) {
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
+  const [showCursor, setShowCursor] = useState(true);
+  const [internalProgress, setInternalProgress] = useState(
+    autoProgress ? 0 : progress
+  );
 
-  // Auto progress logic
   useEffect(() => {
-    const startTime = Date.now();
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const calculated = Math.min((elapsed / autoProgressDuration) * 100, 100);
-      setProgress(calculated);
-      if (calculated >= 100) {
-        clearInterval(interval);
-      }
-    }, 16); // ~60fps
-    return () => clearInterval(interval);
-  }, [autoProgressDuration]);
+    if (!autoProgress) {
+      setInternalProgress(progress);
+      return;
+    }
+    setInternalProgress(0);
+    const step = 5;
+    const steps = 100 / step;
+    const intervalTime = autoProgressDuration / steps;
+    const timer = setInterval(() => {
+      setInternalProgress((prev) => {
+        const next = prev + step;
+        if (next >= 100) {
+          clearInterval(timer);
+          return 100;
+        }
+        return next;
+      });
+    }, intervalTime);
+    return () => clearInterval(timer);
+  }, [autoProgress, autoProgressDuration, progress]);
 
-  // Tip cycling logic
   useEffect(() => {
     if (tips.length === 0) return;
-    const interval = setInterval(() => {
+    const tipTimer = setInterval(() => {
       setCurrentTipIndex((prev) => (prev + 1) % tips.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [tips]);
+    }, tipInterval);
+    return () => clearInterval(tipTimer);
+  }, [tips, tipInterval]);
 
-  const isFullscreen = variant === 'fullscreen';
+  useEffect(() => {
+    const cursorTimer = setInterval(() => {
+      setShowCursor((prev) => !prev);
+    }, 530);
+    return () => clearInterval(cursorTimer);
+  }, []);
 
-  return (
-    <div className={`${
-      isFullscreen
-        ? 'fixed inset-0 z-50 overflow-hidden'
-        : 'relative w-full py-12 rounded-2xl overflow-hidden min-h-[360px]'
-    } relative flex flex-col items-center justify-center bg-[#070a12] text-white select-none ${className}`}>
+  const isFullscreen = variant === "fullscreen";
+  const displayProgress = autoProgress ? internalProgress : progress;
 
-      {/* Aurora gradient blobs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-32 -left-24 w-[28rem] h-[28rem] rounded-full bg-indigo-600/25 blur-[120px]" />
-        <div className="absolute -bottom-32 -right-24 w-[28rem] h-[28rem] rounded-full bg-violet-500/20 blur-[120px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[24rem] h-[24rem] rounded-full bg-sky-500/10 blur-[100px]" />
-      </div>
-
-      {/* Subtle grid overlay */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.06]"
-        style={{
-          backgroundImage:
-            'linear-gradient(to right, rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.6) 1px, transparent 1px)',
-          backgroundSize: '44px 44px',
-          maskImage: 'radial-gradient(ellipse 70% 60% at 50% 45%, black, transparent)',
-        }}
-      />
-
-      <div className="w-full max-w-md px-6 flex flex-col items-center gap-10 relative z-10">
-
-        {/* Spinner ring */}
-        <div className="relative w-16 h-16 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full spin-slow"
-            style={{
-              background: 'conic-gradient(from 0deg, transparent 12%, #818cf8 55%, #22d3ee 100%)',
-              WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 2.5px), black calc(100% - 2.5px))',
-              mask: 'radial-gradient(farthest-side, transparent calc(100% - 2.5px), black calc(100% - 2.5px))',
-            }}
-          />
-          <div className="absolute inset-0 rounded-full bg-indigo-500/10 blur-md" />
-          <div className="w-2 h-2 rounded-full bg-indigo-300 pulse-glow" />
-        </div>
-
-        {/* Subtle eyebrow */}
-        <p className="text-[10px] font-mono font-semibold tracking-[0.35em] text-slate-500 uppercase">
-          Experience
-        </p>
-
-        {/* Premium progress bar */}
-        <div className="w-full space-y-3">
-          <div className="relative h-[3px] w-full rounded-full bg-white/[0.06] overflow-hidden">
-            <div
-              className="absolute inset-y-0 left-0 rounded-full transition-all duration-75 ease-out"
-              style={{
-                width: `${progress}%`,
-                background: 'linear-gradient(90deg, #6366f1, #22d3ee)',
-                boxShadow: '0 0 12px rgba(99,102,241,0.7)',
-              }}
-            />
-            <div
-              className="absolute inset-y-0 rounded-full w-24 shimmer"
-              style={{ left: `calc(${progress}% - 6rem)` }}
-            />
-          </div>
-          <div className="flex justify-between items-center text-[10px] font-mono font-semibold text-slate-500 tracking-widest">
-            <span className="inline-flex items-center gap-2">
-              <span className="w-1 h-1 rounded-full bg-emerald-400 pulse-glow inline-block" />
-              LOADING
+  const content = (
+    <div className="flex flex-col items-center justify-center gap-6 p-8">
+      {/* Title */}
+      <h2
+        className={cn(
+          "retro text-xl md:text-2xl text-center",
+          "animate-pulse"
+        )}
+      >
+        {title}
+      </h2>
+      {/* Progress section */}
+      <div className="w-full max-w-md space-y-2">
+        {showPercentage && (
+          <div className="flex justify-end">
+            <span className="retro text-xs text-muted-foreground">
+              {Math.round(displayProgress)}%
             </span>
-            <span className="tabular-nums text-slate-300">{Math.round(progress)}%</span>
-          </div>
-        </div>
-
-        {/* Tips */}
-        {tips.length > 0 && (
-          <div className="w-full text-center min-h-[40px] flex items-center justify-center px-4">
-            <p key={currentTipIndex} className="text-[13px] text-slate-400 leading-relaxed animate-fade-in font-light tracking-wide">
-              {tips[currentTipIndex]}
-            </p>
           </div>
         )}
+        <Progress
+          value={displayProgress}
+          variant="retro"
+          progressBg="bg-primary"
+          className="h-4"
+        />
       </div>
+      {/* Tips section */}
+      {tips.length > 0 && (
+        <div className="w-full max-w-md min-h-16 flex items-center justify-center">
+          <p className="retro text-[0.625rem] md:text-xs text-center text-muted-foreground leading-relaxed animate-pulse">
+            {tips[currentTipIndex]}
+          </p>
+        </div>
+      )}
+    </div>
+  );
 
-      <style jsx>{`
-        @keyframes ls-spin {
-          to { transform: rotate(360deg); }
-        }
-        @keyframes ls-pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.4; transform: scale(0.85); }
-        }
-        @keyframes ls-shimmer {
-          0% { transform: translateX(0); opacity: 0; }
-          15% { opacity: 0.6; }
-          85% { opacity: 0.6; }
-          100% { transform: translateX(6rem); opacity: 0; }
-        }
-        .spin-slow { animation: ls-spin 1.1s linear infinite; }
-        .pulse-glow { animation: ls-pulse 1.6s ease-in-out infinite; }
-        .shimmer {
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
-          animation: ls-shimmer 1.4s ease-in-out infinite;
-        }
-      `}</style>
+  if (isFullscreen) {
+    return (
+      <div
+        className={cn(
+          "fixed inset-0 z-50 flex items-center justify-center",
+          "bg-background",
+          className
+        )}
+        {...props}
+      >
+        <div className="w-full max-w-lg px-4">{content}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn("w-full", className)} {...props}>
+      {content}
     </div>
   );
 }
