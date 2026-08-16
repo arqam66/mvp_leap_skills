@@ -33,30 +33,31 @@ test.describe('LeapSkills App', () => {
     await expect(page.locator('header >> text=Get Started')).toHaveCount(0);
   });
 
-  test('Sign Up navigates to login page', async ({ page }) => {
+  test('Sign Up navigates to signup page', async ({ page }) => {
     await page.goto('/');
     await page.locator('header button:has-text("Sign Up")').click();
-    await page.waitForURL(/\/login/, { timeout: 30000 });
+    await page.waitForURL(/\/signup/, { timeout: 30000 });
     await expect(page.getByRole('heading', { name: 'Create your Leap Skills Account' })).toBeVisible();
   });
 
   test('signup form has email and password fields', async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/signup');
     await expect(page.getByRole('textbox', { name: 'Email address' })).toBeVisible();
     await expect(page.getByRole('textbox', { name: 'Password' })).toBeVisible();
   });
 
   test('signup form has Google and GitHub buttons', async ({ page }) => {
-    await page.goto('/login');
+    await page.goto('/signup');
     await expect(page.getByRole('button', { name: /Sign in with Google/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Sign in with GitHub/ })).toBeVisible();
   });
 
-  test('signup page can toggle sign up / sign in', async ({ page }) => {
+  test('signup page links to sign-in page', async ({ page }) => {
     await page.goto('/signup');
-    await expect(page.locator('text=Create your account')).toBeVisible();
-    await page.locator('text=Sign In').last().click();
-    await expect(page.locator('text=Welcome back')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Create your Leap Skills Account' })).toBeVisible();
+    await page.locator('text=Sign in').last().click();
+    await page.waitForURL(/\/login/, { timeout: 30000 });
+    await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
   });
 
   test('signup page has back to home link', async ({ page }) => {
@@ -113,7 +114,7 @@ test.describe('LeapSkills App', () => {
 
   test('login page has no brand logo', async ({ page }) => {
     await page.goto('/login');
-    await expect(page.getByRole('heading', { name: 'Create your Leap Skills Account' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
     await expect(page.locator('text=⚡')).toHaveCount(0);
   });
 

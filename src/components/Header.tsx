@@ -67,7 +67,7 @@ export default function Header() {
     router.push('/');
   };
 
-  if (pathname === '/dashboard' || pathname === '/login') return null;
+  if (pathname === '/dashboard' || pathname === '/login' || pathname === '/signup') return null;
 
   const isActive = (p: string) => pathname === p;
 
@@ -147,7 +147,7 @@ export default function Header() {
           {!activeUser ? (
             <button
               type="button"
-              onClick={() => router.push('/login')}
+              onClick={() => router.push('/signup')}
               className="text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 px-4 py-2 rounded-md transition-colors focus-ring cursor-pointer shadow-xs"
             >
               Sign Up
@@ -218,7 +218,7 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => {
-                  router.push('/login');
+                  router.push('/signup');
                   setMobileOpen(false);
                 }}
                 className="text-left px-4 py-3 rounded-md text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors focus-ring cursor-pointer"

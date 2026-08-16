@@ -28,6 +28,7 @@
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
   --bg-color: #fafafa;
+  --card-bg: #ffffff;
   --fg-color: #090d16;
   --muted-color: #f1f5f9;
   --muted-fg-color: #475569;
@@ -37,6 +38,7 @@
 .dark {
   --sidebar-ring: oklch(0.439 0 0);
   --bg-color: #080c14;
+  --card-bg: #0f172a;
   --fg-color: #f8fafc;
   --muted-color: #0f172a;
   --muted-fg-color: #94a3b8;
