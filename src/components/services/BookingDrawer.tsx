@@ -9,11 +9,14 @@ import { wsBookingService } from '../../lib/websocket';
 interface BookingDrawerProps {
   service: Service | null;
   creator: Creator;
+  error?: string | null;
   onClose: () => void;
   onConfirmBooking: (details: {
     service: Service;
     date?: string;
     time?: string;
+    dateLabel?: string;
+    timeLabel?: string;
     clientName: string;
     clientEmail: string;
     notes?: string;
@@ -21,9 +24,21 @@ interface BookingDrawerProps {
   }) => void;
 }
 
+function to24Hour(time12: string): string {
+  const match = time12.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!match) return time12;
+  let hours = parseInt(match[1], 10);
+  const minutes = match[2];
+  const meridiem = match[3].toUpperCase();
+  if (meridiem === 'PM' && hours !== 12) hours += 12;
+  if (meridiem === 'AM' && hours === 12) hours = 0;
+  return `${String(hours).padStart(2, '0')}:${minutes}`;
+}
+
 export default function BookingDrawer({
   service,
   creator,
+  error,
   onClose,
   onConfirmBooking,
 }: BookingDrawerProps) {
@@ -33,7 +48,7 @@ export default function BookingDrawer({
   const format = service.format || (service.type as ServiceFormat) || 'one_on_one';
   const dateOptions = getDateOptions();
 
-  const [selectedDate, setSelectedDate] = useState<string>(dateOptions[0]?.txt || getFutureDate(2));
+  const [selectedDate, setSelectedDate] = useState<string>(dateOptions[0]?.value || getFutureDate(2));
   const [selectedTime, setSelectedTime] = useState<string>('10:00 AM');
   const [clientName, setClientName] = useState(user?.fullName || '');
   const [clientEmail, setClientEmail] = useState(user?.primaryEmailAddress?.emailAddress || user?.emailAddresses?.[0]?.emailAddress || '');
@@ -61,14 +76,19 @@ export default function BookingDrawer({
     e.preventDefault();
     if (!clientName || !clientEmail) return;
 
+    const selectedDateOption = dateOptions.find((opt) => opt.value === selectedDate);
+    const isPaidDM = format === 'paid_dm';
+
     onConfirmBooking({
       service,
-      date: format === 'paid_dm' ? undefined : selectedDate,
-      time: format === 'paid_dm' ? undefined : selectedTime,
+      date: isPaidDM ? undefined : selectedDate,
+      time: isPaidDM ? undefined : to24Hour(selectedTime),
+      dateLabel: isPaidDM ? undefined : selectedDateOption?.txt || selectedDate,
+      timeLabel: isPaidDM ? undefined : selectedTime,
       clientName,
       clientEmail,
       notes,
-      dmQuestion: format === 'paid_dm' ? dmQuestion : undefined,
+      dmQuestion: isPaidDM ? dmQuestion : undefined,
     });
   };
 
@@ -81,19 +101,19 @@ export default function BookingDrawer({
       />
 
       {/* Drawer Content */}
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 h-full p-8 overflow-y-auto flex flex-col justify-between text-slate-900 dark:text-slate-100 shadow-2xl animate-fade-in">
+      <div className="relative w-full max-w-lg bg-white border-l border-slate-200 h-full p-8 overflow-y-auto flex flex-col justify-between text-slate-900 shadow-2xl animate-fade-in">
         <div>
           {/* Header */}
-          <div className="flex items-center justify-between pb-6 border-b border-slate-100 dark:border-slate-800 mb-6">
+          <div className="flex items-center justify-between pb-6 border-b border-slate-100 mb-6">
             <div>
-              <span className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+              <span className="text-xs font-mono font-bold text-indigo-600 uppercase tracking-wider">
                 {creator.name} &bull; {format.replace('_', ' ')}
               </span>
               <h2 className="text-xl font-bold font-headline mt-1">{service.title}</h2>
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 cursor-pointer"
+              className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 cursor-pointer"
             >
               ✕
             </button>
@@ -112,7 +132,7 @@ export default function BookingDrawer({
                   placeholder="Ask your detailed technical or career question here. The expert will respond within 24 hours."
                   rows={5}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 />
               </div>
             ) : (
@@ -126,15 +146,15 @@ export default function BookingDrawer({
                     {dateOptions.slice(0, 6).map((opt) => (
                       <button
                         type="button"
-                        key={opt.txt}
-                        onClick={() => setSelectedDate(opt.txt)}
+                        key={opt.value}
+                        onClick={() => setSelectedDate(opt.value)}
                         className={`p-3 rounded-xl border text-center transition-all cursor-pointer ${
-                          selectedDate === opt.txt
-                            ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 font-bold text-indigo-900 dark:text-indigo-200'
-                            : 'border-slate-200 dark:border-slate-800 hover:border-slate-400'
+                          selectedDate === opt.value
+                            ? 'border-indigo-600 bg-indigo-600 font-bold text-white shadow-sm'
+                            : 'border-slate-200 bg-white hover:border-indigo-400'
                         }`}
                       >
-                        <div className="text-[10px] text-slate-400 uppercase">{opt.dayOfWeek}</div>
+                        <div className={`text-[10px] uppercase ${selectedDate === opt.value ? 'text-indigo-100' : 'text-slate-400'}`}>{opt.dayOfWeek}</div>
                         <div className="text-xs font-bold">{opt.txt}</div>
                       </button>
                     ))}
@@ -155,7 +175,7 @@ export default function BookingDrawer({
                         className={`py-2 px-3 rounded-xl border text-xs text-center transition-all cursor-pointer ${
                           selectedTime === t
                             ? 'border-indigo-600 bg-indigo-600 text-white font-bold'
-                            : 'border-slate-200 dark:border-slate-800 hover:border-slate-400'
+                            : 'border-slate-200 bg-white hover:border-indigo-400'
                         }`}
                       >
                         {t}
@@ -167,7 +187,7 @@ export default function BookingDrawer({
             )}
 
             {/* Client Info */}
-            <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <div className="space-y-4 pt-4 border-t border-slate-100">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Your Information</h3>
               <div>
                 <input
@@ -176,7 +196,7 @@ export default function BookingDrawer({
                   onChange={(e) => setClientName(e.target.value)}
                   placeholder="Your Full Name"
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 />
               </div>
               <div>
@@ -186,7 +206,7 @@ export default function BookingDrawer({
                   onChange={(e) => setClientEmail(e.target.value)}
                   placeholder="Your Email Address"
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 />
               </div>
               <div>
@@ -195,10 +215,16 @@ export default function BookingDrawer({
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Additional context or topics to cover (optional)..."
                   rows={2}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 />
               </div>
             </div>
+
+            {error && (
+              <div className="rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-sm font-semibold px-4 py-3">
+                {error}
+              </div>
+            )}
 
             <button
               type="submit"
@@ -209,7 +235,7 @@ export default function BookingDrawer({
           </form>
         </div>
 
-        <div className="pt-6 text-center text-xs text-slate-400 border-t border-slate-100 dark:border-slate-800">
+        <div className="pt-6 text-center text-xs text-slate-400 border-t border-slate-100">
           <div className="flex items-center justify-center gap-1.5 mb-1">
             <span className={`w-1.5 h-1.5 rounded-full ${wsConnected ? 'bg-emerald-500' : 'bg-amber-500'} animate-pulse`} />
             Real-Time WebSocket Booking Network {wsConnected ? 'Connected' : 'Connecting...'}

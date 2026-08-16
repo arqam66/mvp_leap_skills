@@ -8,6 +8,7 @@ export interface DateOption {
   dayOfWeek: string;
   dateNum: string;
   txt: string;
+  value: string;
 }
 
 export function getDateOptions(): DateOption[] {
@@ -16,10 +17,12 @@ export function getDateOptions(): DateOption[] {
   return offsets.map((days) => {
     const date = new Date();
     date.setDate(date.getDate() + days);
+    const value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     return {
       dayOfWeek: date.toLocaleDateString('en-US', { weekday: 'short' }),
       dateNum: date.getDate().toString(),
       txt: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+      value,
     };
   });
 }

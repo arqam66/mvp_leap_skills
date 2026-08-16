@@ -136,10 +136,12 @@ export default function Dashboard() {
     setWithdrawableAmount(0);
   };
 
+  const inputClass = 'w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100';
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row text-slate-900 dark:text-slate-100">
+    <div className="min-h-screen bg-[#fafafa] flex flex-col md:flex-row text-slate-900">
       {/* Sidebar Navigation */}
-      <aside className="w-full md:w-64 bg-slate-900 text-slate-100 flex flex-col justify-between shrink-0 select-none md:h-screen md:sticky md:top-0 p-5">
+      <aside className="w-full md:w-64 bg-white text-slate-900 border-b md:border-b-0 md:border-r border-slate-200 flex flex-col justify-between shrink-0 select-none md:h-screen md:sticky md:top-0 p-5">
         <div>
           <div className="flex items-center gap-3 mb-8">
             <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold">
@@ -166,7 +168,7 @@ export default function Dashboard() {
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                   activeTab === item.id
                     ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 <div className="flex items-center gap-2.5">
@@ -183,19 +185,19 @@ export default function Dashboard() {
           </nav>
         </div>
 
-        <div className="pt-6 border-t border-slate-800 space-y-3">
-          <div className="p-3 bg-slate-800/60 rounded-xl space-y-1">
+        <div className="pt-6 border-t border-slate-200 space-y-3">
+          <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
             <div className="text-[11px] text-slate-400">Signed in as</div>
-            <div className="font-bold text-sm text-white truncate">{clerkUser?.fullName || 'Guest'}</div>
-            <div className="font-mono text-[11px] text-indigo-400 truncate">{userEmail || '—'}</div>
+            <div className="font-bold text-sm text-slate-900 truncate">{clerkUser?.fullName || 'Guest'}</div>
+            <div className="font-mono text-[11px] text-indigo-600 truncate">{userEmail || '—'}</div>
           </div>
-          <div className="p-3 bg-slate-800/60 rounded-xl text-xs space-y-1">
-            <div className="text-slate-400">Shareable Profile URL</div>
-            <div className="font-mono text-indigo-400 font-bold truncate">creatorhub.pro/{selectedCreator.id}</div>
+          <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
+            <div className="text-slate-500">Shareable Profile URL</div>
+            <div className="font-mono text-indigo-600 font-bold truncate">creatorhub.pro/{selectedCreator.id}</div>
           </div>
           <button
             onClick={() => router.push(`/profile/${selectedCreator.id}`)}
-            className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl transition-all cursor-pointer"
+            className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-bold rounded-xl transition-all cursor-pointer"
           >
             View Public Profile ↗
           </button>
@@ -226,16 +228,16 @@ export default function Dashboard() {
 
             {/* Mentor Onboarding Prompt / Questionnaire */}
             {(userRole !== 'instructor' || showMentorQuestionnaire) && (
-              <div className="p-6 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-slate-900 border border-indigo-700/80 text-white rounded-3xl space-y-6 shadow-xl animate-fade-in">
+              <div className="p-6 bg-gradient-to-br from-indigo-50 via-violet-50 to-slate-100 border border-indigo-200/70 text-slate-900 rounded-3xl space-y-6 animate-fade-in">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                   <div className="space-y-1">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 text-indigo-200 text-xs font-mono font-bold rounded-full border border-white/20">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-600 text-white text-xs font-mono font-bold rounded-full shadow-sm">
                       <span>MENTOR QUESTIONNAIRE</span>
                     </div>
-                    <h2 className="font-headline text-2xl font-extrabold text-white">
-                      Want to be a Mentor on CreatorHub Pro?
+                    <h2 className="font-headline text-2xl font-extrabold text-slate-900">
+                      Want to be a Mentor on Leap Skills?
                     </h2>
-                    <p className="text-sm text-indigo-100/80 max-w-xl">
+                    <p className="text-sm text-slate-600 max-w-xl">
                       Answer a few quick questions to create your mentor profile, configure your booking calendar, and start receiving 1:1 sessions & paid DMs.
                     </p>
                   </div>
@@ -243,7 +245,7 @@ export default function Dashboard() {
                     <button
                       type="button"
                       onClick={() => setShowMentorQuestionnaire(true)}
-                      className="px-6 py-3 bg-white text-indigo-950 font-bold text-sm rounded-xl hover:bg-indigo-50 transition-all shadow-md cursor-pointer shrink-0"
+                      className="px-6 py-3 bg-white text-indigo-700 font-bold text-sm rounded-xl border border-indigo-200 hover:bg-indigo-50 transition-all shadow-sm cursor-pointer shrink-0"
                     >
                       Answer Mentor Questions &rarr;
                     </button>
@@ -251,16 +253,16 @@ export default function Dashboard() {
                 </div>
 
                 {showMentorQuestionnaire && (
-                  <form onSubmit={handleMentorQuestionnaireSubmit} className="mt-4 pt-6 border-t border-white/15 space-y-4 bg-slate-950/60 p-6 rounded-2xl border border-white/10">
-                    <h3 className="text-lg font-bold text-white mb-2">Mentor Application & Profile Questions</h3>
+                  <form onSubmit={handleMentorQuestionnaireSubmit} className="mt-4 pt-6 border-t border-indigo-200/60 space-y-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 className="text-lg font-bold text-slate-900 mb-2">Mentor Application & Profile Questions</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-indigo-200 mb-1">Expertise Category</label>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Expertise Category</label>
                         <select
                           value={mentorCategory}
                           onChange={(e: any) => setMentorCategory(e.target.value)}
-                          className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-indigo-400"
+                          className={inputClass}
                         >
                           <option value="tech">Software & AI Technology</option>
                           <option value="design">UI/UX Design & Product</option>
@@ -270,50 +272,50 @@ export default function Dashboard() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-indigo-200 mb-1">Headline / Professional Title</label>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Headline / Professional Title</label>
                         <input
                           type="text"
                           value={mentorTitle}
                           onChange={(e) => setMentorTitle(e.target.value)}
                           placeholder="e.g. Senior Software Architect @ TechCorp"
                           required
-                          className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-indigo-400"
+                          className={inputClass}
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-indigo-200 mb-1">Organization / Company</label>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Organization / Company</label>
                         <input
                           type="text"
                           value={mentorOrg}
                           onChange={(e) => setMentorOrg(e.target.value)}
                           placeholder="e.g. Independent Advisor / Startup Founder"
-                          className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-indigo-400"
+                          className={inputClass}
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider text-indigo-200 mb-1">Starting Session Rate (PKR / Rs.)</label>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Starting Session Rate (PKR / Rs.)</label>
                         <input
                           type="number"
                           value={mentorPrice}
                           onChange={(e) => setMentorPrice(Number(e.target.value))}
                           required
-                          className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-indigo-400"
+                          className={inputClass}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-indigo-200 mb-1">Bio / About Your Mentorship</label>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Bio / About Your Mentorship</label>
                       <textarea
                         value={mentorBio}
                         onChange={(e) => setMentorBio(e.target.value)}
                         placeholder="Describe your domain experience and how you guide mentes..."
                         rows={3}
-                        className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-indigo-400"
+                        className={inputClass}
                       />
                     </div>
 
@@ -321,13 +323,13 @@ export default function Dashboard() {
                       <button
                         type="button"
                         onClick={() => setShowMentorQuestionnaire(false)}
-                        className="px-5 py-2.5 border border-slate-700 rounded-xl text-xs font-semibold hover:bg-slate-800 text-slate-300"
+                        className="px-5 py-2.5 border border-slate-300 rounded-xl text-xs font-semibold hover:bg-slate-100 text-slate-600"
                       >
                         Dismiss
                       </button>
                       <button
                         type="submit"
-                        className="px-6 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold rounded-xl shadow-lg transition-all cursor-pointer"
+                        className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl shadow-lg transition-all cursor-pointer"
                       >
                         Submit & Display Mentor Profile ✨
                       </button>
@@ -339,22 +341,22 @@ export default function Dashboard() {
 
             {/* Metrics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+              <div className="p-5 bg-white border border-slate-200 rounded-2xl shadow-xs">
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Gross Revenue</div>
                 <div className="text-2xl font-black font-mono mt-1">Rs. 384,000</div>
-                <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-1">↑ 18% vs last month</div>
+                <div className="text-[11px] text-emerald-600 font-semibold mt-1">↑ 18% vs last month</div>
               </div>
-              <div className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+              <div className="p-5 bg-white border border-slate-200 rounded-2xl shadow-xs">
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Withdrawable Balance</div>
-                <div className="text-2xl font-black font-mono text-indigo-600 dark:text-indigo-400 mt-1">{formatPKR(withdrawableAmount || 145000)}</div>
+                <div className="text-2xl font-black font-mono text-indigo-600 mt-1">{formatPKR(withdrawableAmount || 145000)}</div>
                 <div className="text-[11px] text-slate-400 mt-1">Instant Payout Rail Active</div>
               </div>
-              <div className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+              <div className="p-5 bg-white border border-slate-200 rounded-2xl shadow-xs">
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Upcoming Bookings</div>
                 <div className="text-2xl font-black font-mono mt-1">{bookings.length}</div>
                 <div className="text-[11px] text-slate-400 mt-1">1:1 & Webinar sessions</div>
               </div>
-              <div className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+              <div className="p-5 bg-white border border-slate-200 rounded-2xl shadow-xs">
                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pending Paid DMs</div>
                 <div className="text-2xl font-black font-mono text-rose-500 mt-1">
                   {paidDMs.filter((d) => d.status === 'awaiting_response').length}
@@ -364,12 +366,12 @@ export default function Dashboard() {
             </div>
 
             {/* Bookings List */}
-            <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-4">
+            <div className="p-6 bg-white border border-slate-200 rounded-3xl shadow-xs space-y-4">
               <h2 className="font-headline text-lg font-bold">Upcoming Sessions & Bookings</h2>
               {bookings.length === 0 ? (
                 <div className="py-8 text-center text-sm text-slate-400">No active bookings yet. Share your profile link to get started!</div>
               ) : (
-                <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                <div className="divide-y divide-slate-100">
                   {bookings.map((b) => (
                     <div key={b.id} className="py-3 flex items-center justify-between">
                       <div>
@@ -377,7 +379,7 @@ export default function Dashboard() {
                         <div className="text-xs text-slate-500">{b.serviceTitle} &bull; {b.date} @ {b.time}</div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="px-3 py-1 text-xs font-bold rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+                        <span className="px-3 py-1 text-xs font-bold rounded-full bg-emerald-50 text-emerald-600">
                           Confirmed
                         </span>
                         <button
@@ -413,9 +415,9 @@ export default function Dashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {creatorServices.map((s) => (
-                <div key={s.id} className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl flex justify-between items-start">
+                <div key={s.id} className="p-6 bg-white border border-slate-200 rounded-2xl shadow-xs flex justify-between items-start">
                   <div>
-                    <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase rounded bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-300">
+                    <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase rounded bg-indigo-50 text-indigo-700">
                       {s.format || s.type || 'one_on_one'}
                     </span>
                     <h3 className="font-bold text-lg mt-2">{s.title}</h3>
@@ -423,7 +425,7 @@ export default function Dashboard() {
                     <div className="text-xs font-semibold text-slate-400 mt-3">{s.duration || '45 mins'}</div>
                   </div>
                   <div className="text-right">
-                    <div className="font-mono text-xl font-extrabold text-indigo-600 dark:text-indigo-400">${s.price}</div>
+                    <div className="font-mono text-xl font-extrabold text-indigo-600">${s.price}</div>
                   </div>
                 </div>
               ))}
@@ -432,7 +434,7 @@ export default function Dashboard() {
             {/* Add Service Modal */}
             {showAddServiceModal && (
               <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-                <div className="w-full max-w-md bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
+                <div className="w-full max-w-md bg-white p-6 rounded-3xl border border-slate-200 shadow-2xl space-y-4">
                   <h3 className="font-headline font-bold text-xl">Add New Offering</h3>
                   <form onSubmit={handleCreateServiceSubmit} className="space-y-4">
                     <div>
@@ -440,7 +442,7 @@ export default function Dashboard() {
                       <select
                         value={newFormat}
                         onChange={(e: any) => setNewFormat(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-semibold"
+                        className={inputClass}
                       >
                         <option value="one_on_one">1:1 Consultation</option>
                         <option value="webinar">Group Webinar</option>
@@ -456,7 +458,7 @@ export default function Dashboard() {
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
                         required
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                        className={inputClass}
                       />
                     </div>
 
@@ -467,7 +469,7 @@ export default function Dashboard() {
                         value={newPrice}
                         onChange={(e) => setNewPrice(Number(e.target.value))}
                         required
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                        className={inputClass}
                       />
                     </div>
 
@@ -478,7 +480,7 @@ export default function Dashboard() {
                         onChange={(e) => setNewDesc(e.target.value)}
                         rows={2}
                         required
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                        className={inputClass}
                       />
                     </div>
 
@@ -486,7 +488,7 @@ export default function Dashboard() {
                       <button
                         type="button"
                         onClick={() => setShowAddServiceModal(false)}
-                        className="flex-1 py-3 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold"
+                        className="flex-1 py-3 border border-slate-300 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50"
                       >
                         Cancel
                       </button>
@@ -514,7 +516,7 @@ export default function Dashboard() {
 
             <div className="space-y-4">
               {paidDMs.map((dm) => (
-                <div key={dm.id} className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-4">
+                <div key={dm.id} className="p-6 bg-white border border-slate-200 rounded-3xl shadow-xs space-y-4">
                   <div className="flex justify-between items-start">
                     <div>
                       <div className="font-bold text-base">{dm.clientName}</div>
@@ -522,20 +524,20 @@ export default function Dashboard() {
                     </div>
                     <span className={`px-3 py-1 text-xs font-bold rounded-full ${
                       dm.status === 'awaiting_response'
-                        ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400'
-                        : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400'
+                        ? 'bg-rose-50 text-rose-600'
+                        : 'bg-emerald-50 text-emerald-600'
                     }`}>
                       {dm.status === 'awaiting_response' ? 'Awaiting Response' : 'Responded'}
                     </span>
                   </div>
 
-                  <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-2xl text-sm italic border-l-4 border-indigo-600">
+                  <div className="p-4 bg-slate-50 rounded-2xl text-sm italic text-slate-700 border-l-4 border-indigo-600">
                     "{dm.question}"
                   </div>
 
                   {dm.response ? (
-                    <div className="p-4 bg-indigo-50/50 dark:bg-indigo-950/30 rounded-2xl text-sm border border-indigo-100 dark:border-indigo-800/50">
-                      <div className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-1">Your Response</div>
+                    <div className="p-4 bg-indigo-50/60 rounded-2xl text-sm border border-indigo-100">
+                      <div className="text-xs font-bold text-indigo-600 mb-1">Your Response</div>
                       <p>{dm.response}</p>
                     </div>
                   ) : (
@@ -545,7 +547,7 @@ export default function Dashboard() {
                         onChange={(e) => setReplyText({ ...replyText, [dm.id]: e.target.value })}
                         placeholder="Write your advice/answer to the client..."
                         rows={3}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                       />
                       <button
                         onClick={() => handleReplyDM(dm.id)}
@@ -569,23 +571,23 @@ export default function Dashboard() {
               <p className="text-sm text-slate-500">Platform operates on zero subscription fee — platform takes commission only on transacted revenue.</p>
             </div>
 
-            <div className="p-8 bg-indigo-600 text-white rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+            <div className="p-8 bg-indigo-50 border border-indigo-200 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
               <div>
-                <div className="text-xs font-bold uppercase tracking-wider text-indigo-200">Available Payout Balance</div>
-                <div className="text-4xl font-black font-mono mt-1">${withdrawableAmount}</div>
-                <div className="text-xs text-indigo-200 mt-2">Instant Stripe Connect & UPI Payout Rail Active</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-indigo-500">Available Payout Balance</div>
+                <div className="text-4xl font-black font-mono mt-1 text-indigo-700">${withdrawableAmount}</div>
+                <div className="text-xs text-slate-500 mt-2">Instant Stripe Connect & UPI Payout Rail Active</div>
               </div>
               <button
                 onClick={handleExecutePayout}
                 disabled={withdrawableAmount <= 0}
-                className="px-6 py-3.5 bg-white text-indigo-900 font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-indigo-50 transition-all cursor-pointer disabled:opacity-50"
+                className="px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Withdraw Funds Instantly &rarr;
               </button>
             </div>
 
             {withdrawSuccessModal && (
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 text-emerald-800 dark:text-emerald-200 rounded-2xl text-sm font-bold">
+              <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-sm font-bold">
                 ✓ Instant Payout of ${lastWithdrawnAmount} triggered! Funds will hit your connected bank/UPI account within seconds.
               </div>
             )}
@@ -600,7 +602,7 @@ export default function Dashboard() {
               <p className="text-sm text-slate-500">Automatically direct social followers from Instagram DMs to your profile link.</p>
             </div>
 
-            <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl space-y-4">
+            <div className="p-6 bg-white border border-slate-200 rounded-3xl shadow-xs space-y-4">
               <h2 className="font-bold text-lg">Instagram Auto-DM Bot Rule</h2>
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Trigger Keyword</label>
@@ -608,7 +610,7 @@ export default function Dashboard() {
                   type="text"
                   value={dmKeyword}
                   onChange={(e) => setDmKeyword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm font-mono"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-sm font-mono focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 />
               </div>
 
@@ -618,7 +620,7 @@ export default function Dashboard() {
                   value={dmTemplate}
                   onChange={(e) => setDmTemplate(e.target.value)}
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 />
               </div>
 

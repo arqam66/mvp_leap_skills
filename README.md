@@ -202,6 +202,93 @@ Integrated via [`src/lib/notifications.ts`](src/lib/notifications.ts):
 
 ---
 
+## 📦 Libraries & Dependencies
+
+### Core Runtime
+
+| Package | Version | Purpose |
+|---|---|---|
+| `next` | ^15.5.19 | React framework (App Router, API routes, middleware) |
+| `react` / `react-dom` | ^19.0.1 | UI rendering |
+| `typescript` | ~5.8.2 | Static type checking (Strict Mode) |
+
+### Authentication
+
+| Package | Version | Purpose |
+|---|---|---|
+| `@clerk/nextjs` | ^6.39.6 | Clerk auth for Next.js (sign-in, sessions, middleware) |
+| `@clerk/types` | (transitive) | Clerk type definitions |
+
+### Database & Backend
+
+| Package | Version | Purpose |
+|---|---|---|
+| `mongodb` | ^7.5.0 | MongoDB Atlas connection & document persistence |
+| `@supabase/ssr` | ^0.5.2 | Supabase client for Next.js server/browser |
+| `@supabase/supabase-js` | ^2.49.1 | Supabase Postgres queries & real-time |
+| `zod` | ^3.24.2 | Runtime API request validation |
+
+### Payments & Notifications
+
+| Package | Version | Purpose |
+|---|---|---|
+| `stripe` | ^17.7.0 | Stripe Checkout, Connect payouts & webhooks |
+| `resend` | ^4.1.2 | Transactional email dispatch |
+
+### Real-Time Video
+
+| Package | Version | Purpose |
+|---|---|---|
+| `livekit-client` | ^2.9.3 | WebRTC meeting room client |
+| `livekit-server-sdk` | ^2.11.0 | Meeting room access token generation |
+| `@livekit/components-react` | ^2.8.0 | LiveKit React components (installed) |
+| `@livekit/components-styles` | ^1.2.0 | LiveKit default component styles |
+
+### State Management & Data Fetching
+
+| Package | Version | Purpose |
+|---|---|---|
+| `zustand` | ^5.0.0 | Lightweight global store |
+| `@tanstack/react-query` | ^5.67.2 | Server-state caching & fetching |
+
+### UI / Styling
+
+| Package | Version | Purpose |
+|---|---|---|
+| `tailwindcss` | ^4.1.14 | Utility-first styling |
+| `@tailwindcss/postcss` | ^4.1.14 | Tailwind v4 PostCSS plugin |
+| `tw-animate-css` | ^1.4.0 | Tailwind animation utilities |
+| `clsx` | ^3.x | Conditional class names |
+| `tailwind-merge` | ^3.6.0 | Tailwind class conflict merging |
+| `class-variance-authority` | ^0.7.1 | Variant-driven UI component API |
+| `lucide-react` | ^0.546.0 | Icon components |
+| `motion` | ^12.23.24 | Declarative animations |
+
+### Forms & Validation
+
+| Package | Version | Purpose |
+|---|---|---|
+| `react-hook-form` | ^7.54.2 | Form state & validation |
+| `@hookform/resolvers` | ^3.9.0 | Schema resolver bridge (zod) |
+
+### Analytics & Device Trust
+
+| Package | Version | Purpose |
+|---|---|---|
+| `@fingerprintjs/fingerprintjs` | ^5.2.0 | Global device visitor fingerprinting |
+
+### Tooling & Testing
+
+| Package | Version | Purpose |
+|---|---|---|
+| `@playwright/test` | ^1.61.1 | E2E browser testing |
+| `@types/node` | ^22.14.0 | Node.js type definitions |
+| `@types/react` | ^19.0.0 | React type definitions |
+| `@types/react-dom` | ^19.0.0 | React DOM type definitions |
+| `cross-env` | ^10.1.0 | Cross-platform environment variables |
+
+---
+
 ## 📁 Project Architecture & Directory Map
 
 ```
