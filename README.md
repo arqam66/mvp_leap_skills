@@ -1,138 +1,214 @@
 <div align="center">
   <br />
-  <h1>Leap Skills</h1>
-  <p><strong>All-in-One Creator Monetization Platform</strong></p>
-  <p>A Topmate-style marketplace for trainers, coaches, mentors, and experts to monetize their knowledge.</p>
+  <h1>🚀 Leap Skills</h1>
+  <p><strong>The #1 Creator Monetization Platform for Engineers, Technical Architects & Advisors</strong></p>
+  <p>Book 1:1 consultations, host webinars, sell digital assets, and get instant payouts — all from one unified profile link.</p>
+
+  <p>
+    <a href="https://leapskills.sbs"><img src="https://img.shields.io/badge/Production-leapskills.sbs-00E599?style=for-the-badge&logo=vercel&logoColor=white" alt="Production Site" /></a>
+    <a href="https://nextjs.org"><img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js 15" /></a>
+    <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" /></a>
+    <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS v4" /></a>
+    <a href="https://clerk.com"><img src="https://img.shields.io/badge/Auth-Clerk-6C47FF?style=for-the-badge&logo=clerk&logoColor=white" alt="Clerk Auth" /></a>
+    <a href="https://mongodb.com"><img src="https://img.shields.io/badge/Database-MongoDB_Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB Atlas" /></a>
+    <a href="https://livekit.io"><img src="https://img.shields.io/badge/Video-LiveKit_WebRTC-FF4F00?style=for-the-badge&logo=livekit&logoColor=white" alt="LiveKit WebRTC" /></a>
+  </p>
   <br />
 </div>
 
-## Overview
+---
 
-Leap Skills (codename: CreatorHub Pro) is a full-stack Next.js platform that lets creators build a unified storefront to sell mentorship sessions, digital products, webinars, and more — all from a single profile link.
+## 📌 Overview
 
-### Features
+**Leap Skills** (codename: *CreatorHub Pro*) is an enterprise-grade creator monetization platform built with **Next.js 15 App Router**, **TypeScript**, **Tailwind CSS v4**, **MongoDB Atlas**, **Clerk Auth**, and **LiveKit WebRTC**. 
 
-- **Profile Storefront** — Public trainer profile with services, bio, and inline checkout
-- **Service Offerings** — 1:1 mentorship, webinars, cohort-based courses, service packages, and paid DMs
-- **Digital Products** — Sell PDFs, templates, ebooks, guides, and pre-recorded courses
-- **Payments** — Stripe, Razorpay, and UPI integration (planned)
-- **Video Meetings** — Native WebRTC (P2P + webinar mode) with optional Zoom (planned)
-- **Calendar Sync** — Two-way sync with Google Calendar, Outlook, and iCloud (planned)
-- **AI Discovery** — LLM-powered expert matching for clients (planned)
-- **Analytics** — Audience insights, conversion dashboards, and format-performance tracking
-- **Communications** — Email (Resend) and WhatsApp Business API (planned)
-- **Growth Tools** — Instagram Auto-DM keyword replier (planned)
+It empowers technical experts, software engineers, DevOps architects, and advisors to launch a single, shareable link storefront to monetize their knowledge through:
+- **1:1 Video Mentorship & Consultations**
+- **Cohort-Based Courses & Webinars**
+- **Digital Product & Template Sales**
+- **Paid Q&A / DMs**
 
-### User Roles
+---
 
-| Role    | Description |
-|---------|-------------|
-| Client  | Browses, books, and purchases services from trainers |
-| Trainer | Manages profile, services, earnings, and analytics |
-| Admin   | Manages users, trainers, bookings, payments, and platform settings |
+## ✨ Core Features
 
-## Tech Stack
+### 🛒 1. Unified Creator Storefront
+- **Custom Profile URLs**: Shareable canonical profiles (`leapskills.sbs/[username]`).
+- **Interactive Service Drawers**: Instant booking flow for 1:1 sessions, cohorts, paid DMs, and digital products.
+- **Dark/Light Mode**: Smooth system-aware theme toggle with zero hydration flash.
 
-| Layer           | Technology |
-|-----------------|------------|
-| **Framework**   | Next.js 15 (App Router) |
-| **Language**    | TypeScript |
-| **Styling**     | Tailwind CSS v4, Material Symbols, Google Fonts (Inter, Sora) |
-| **State**       | Zustand v5 |
-| **Data Fetch**  | TanStack Query v5 |
-| **Animation**   | motion (Framer Motion) |
-| **Icons**       | lucide-react |
-| **Planned**     | Supabase, Stripe, Razorpay, WebRTC, Socket.io, Resend, Google/Outlook/iCloud Calendar APIs, WhatsApp Business API, Instagram Graph API |
+### 🎥 2. WebRTC Video Meetings & LiveKit Integration
+- **Auto-Generated Meeting Rooms**: Instant room creation upon booking (`/meeting/[roomId]`).
+- **LiveKit Integration**: High-definition video, crystal-clear audio, screen sharing, and participant controls.
 
-## Getting Started
+### 🛡️ 3. Authentication & Security
+- **Clerk Authentication**: Streamlined signup-only flow with user role assignments (`client`, `trainer`, `admin`).
+- **API Guard & Rate Limiting**: Per-IP rate limiting (`src/lib/rate-limit.ts`) and Zod schema validation across API routes.
+- **CORS Middleware**: Strict origin allowlist with OPTIONS preflight handling.
+
+### 📊 4. Admin Management Dashboard
+- **Platform Analytics**: Total users, active bookings, gross platform revenue, and fee configurations (`/admin`).
+- **User Moderation**: Instant user ban/unban API (`/api/admin/users/ban`) with role verification.
+- **Transaction Logs**: Audit payouts, platform fees, and booking states in real-time.
+
+### ⚡ 5. Real-Time Booking Network & Payments
+- **WebSocket Booking Bus**: Instant booking confirmation and real-time state synchronization.
+- **Stripe Connect Payouts**: Automated instant payouts and checkout sessions (`/api/payments/stripe/checkout`).
+- **MongoDB Atlas Persistence**: Fast, scalable document storage for users, transactions, and bookings.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | Next.js 15 (App Router, Server Actions, Dynamic Routes) |
+| **Language** | TypeScript 5 (Strict Mode) |
+| **Styling** | Tailwind CSS v4, Material Symbols, Google Fonts |
+| **Authentication** | Clerk Auth (`@clerk/nextjs`) |
+| **Database** | MongoDB Atlas (`mongodb`), Supabase SSR (`@supabase/ssr`) |
+| **Video Engine** | LiveKit WebRTC (`@livekit/components-react`, `livekit-client`) |
+| **State & Data** | Zustand v5, TanStack Query v5 |
+| **Validation** | Zod (`zod`), `@hookform/resolvers` |
+| **Emails & Payments** | Resend API (`resend`), Stripe SDK (`stripe`) |
+| **Deployment** | Vercel (Edge Middleware, Global CDN) |
+
+---
+
+## 📁 Directory Structure
+
+```
+├── public/                 # Favicons, OG images, static assets
+├── src/
+│   ├── app/                # Next.js 15 App Router Pages & API Routes
+│   │   ├── [username]/     # Canonical creator profile route
+│   │   ├── about/          # About Leap Skills
+│   │   ├── admin/          # Admin management & moderation dashboard
+│   │   ├── api/            # Secure REST API endpoints
+│   │   │   ├── admin/      # Admin user ban & settings endpoints
+│   │   │   ├── availability/ # Trainer schedule management
+│   │   │   ├── bookings/   # Booking creation & query API
+│   │   │   ├── meetings/   # LiveKit token generator
+│   │   │   ├── payments/   # Stripe checkout & webhooks
+│   │   │   └── payouts/    # Stripe Connect payout management
+│   │   ├── contact/        # Zod-validated support ticket page
+│   │   ├── dashboard/      # Creator analytics & settings
+│   │   ├── explore/        # Marketplace discovery directory
+│   │   ├── faq/            # FAQ page with interactive components
+│   │   ├── meeting/        # WebRTC video meeting room ([roomId])
+│   │   ├── profile/[slug]/ # Profile slug resolver
+│   │   ├── layout.tsx      # Root layout (ClerkProvider, QueryProvider, SEO)
+│   │   ├── sitemap.ts      # Dynamic sitemap generator
+│   │   └── robots.ts       # Robots.txt configuration
+│   ├── components/         # Modular UI components
+│   │   ├── services/       # Service cards, booking drawers, checkout
+│   │   ├── seo/            # Dynamic JSON-LD structured data
+│   │   ├── AuthModal.tsx   # Sign-up modal
+│   │   ├── Dashboard.tsx   # Trainer dashboard view
+│   │   └── Header.tsx      # Global navigation header
+│   ├── hooks/              # Custom React hooks (useTrainerDashboard)
+│   ├── lib/                # Core utilities & service clients
+│   │   ├── api-guard.ts    # Rate limiting & authorization wrapper
+│   │   ├── mongodb.ts      # MongoDB Atlas connection manager
+│   │   ├── websocket.ts    # Real-time WebSocket booking service
+│   │   └── supabase/       # Supabase client & server instances
+│   └── middleware.ts       # Clerk Auth + CORS API Security Middleware
+├── next.config.mjs         # Production Next.js build configuration
+├── package.json            # Node.js dependencies & npm scripts
+├── tsconfig.json           # TypeScript configuration
+└── vercel.json             # Vercel deployment configuration
+```
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ (LTS recommended)
-- npm
+- **Node.js**: `v18.x` or higher (LTS recommended)
+- **Package Manager**: `npm` or `pnpm`
 
-### Installation
+### 1. Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/creatorhub-pro.git
-cd creatorhub-pro
+git clone https://github.com/arqam66/mvp_leap_skills.git
+cd mvp_leap_skills
 
 # Install dependencies
 npm install
-
-# Set up environment variables
-cp .env.example .env.local
-# Edit .env.local and add your GEMINI_API_KEY
 ```
 
-### Development
+### 2. Environment Setup
+
+Create a `.env.local` file in the root directory and add your environment credentials:
+
+```env
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+# Database Connection
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/leapskills
+
+# Supabase (Optional)
+NEXT_PUBLIC_SUPABASE_URL=https://<your-project>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+
+# LiveKit WebRTC Video
+NEXT_PUBLIC_LIVEKIT_URL=wss://<your-subdomain>.livekit.cloud
+LIVEKIT_API_KEY=devkey
+LIVEKIT_API_SECRET=secretsecretsecret...
+
+# Stripe Payments & Payouts
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# General Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### 3. Running Locally
 
 ```bash
+# Start Next.js development server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Production Build
+---
+
+## 📦 Production & Deployment
+
+### Build & Validate
+
+To test the production build locally:
 
 ```bash
 npm run build
 npm start
 ```
 
-### Lint
+### Vercel Deployment
 
-```bash
-npm run lint
-```
+This project is optimized for 1-click deployment on **Vercel**:
 
-## Project Structure
+1. Import the repository in your [Vercel Dashboard](https://vercel.com).
+2. Configure the **Environment Variables** in Vercel settings.
+3. Deploy! Vercel will automatically build using [`next.config.mjs`](file:///e:/mvp/next.config.mjs) and [`vercel.json`](file:///e:/mvp/vercel.json).
 
-```
-src/
-├── app/               # Next.js App Router pages
-│   ├── layout.tsx     # Root layout (fonts, globals)
-│   ├── page.tsx       # Landing page
-│   ├── dashboard/     # Creator dashboard
-│   ├── explore/       # Trainer marketplace
-│   └── profile/[slug] # Trainer profile pages
-├── components/        # React components
-│   ├── LandingPage.tsx
-│   ├── Header.tsx
-│   ├── Footer.tsx
-│   ├── Dashboard.tsx
-│   ├── ExplorePage.tsx
-│   └── ProfilePage.tsx
-├── store/             # Zustand state management
-├── data/              # Mock data
-├── utils/             # Utility functions
-└── types.ts           # TypeScript interfaces
-```
+---
 
-## Environment Variables
+## 🔒 Security & Best Practices
 
-| Variable         | Description |
-|------------------|-------------|
-| `GEMINI_API_KEY` | Gemini AI API key |
-| `APP_URL`        | Public URL of the hosted app |
+- **Zero Hardcoded Secrets**: All keys are managed strictly via environment variables.
+- **Input Sanitization & Schema Validation**: Built-in Zod validation across form submissions and API endpoints.
+- **Security Headers**: Production HTTP headers set for `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, and `Permissions-Policy`.
+- **Search Engine Optimization**: Full dynamic JSON-LD schema (Organization, Person, Service) for search engine indexing.
 
-## Status
+---
 
-This project is in **active development**. The frontend UI prototype with mock data is functional. Backend services, authentication, payments, video, calendar, and third-party integrations are planned and documented.
+## 📄 License
 
-### Planned Integrations
-
-- [ ] Supabase (PostgreSQL, Auth, Storage, Edge Functions, Realtime)
-- [ ] Stripe, Razorpay, UPI payments
-- [ ] WebRTC video (P2P + SFU webinar mode)
-- [ ] Socket.io signaling
-- [ ] Google Calendar, Outlook, iCloud Calendar sync
-- [ ] Resend / SendGrid email
-- [ ] WhatsApp Business API
-- [ ] Instagram Auto-DM
-- [ ] LLM-based expert matching
-
-## License
-
-[MIT](LICENSE)
+Distributed under the **MIT License**. See `LICENSE` for details.
