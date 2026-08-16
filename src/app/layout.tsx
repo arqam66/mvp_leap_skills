@@ -14,10 +14,7 @@ const DEFAULT_DESCRIPTION =
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#080c14' },
-  ],
+  themeColor: '#ffffff',
 };
 
 export const metadata: Metadata = {
@@ -119,17 +116,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <head>
-          {/* Dark mode flash prevention */}
-          <script dangerouslySetInnerHTML={{ __html: `
-            try {
-              if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-              } else {
-                document.documentElement.classList.remove('dark');
-              }
-            } catch (_) {}
-          `}} />
-
           {/* Google Fonts */}
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -139,7 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* Global JSON-LD structured data — SEO + GEO + AEO */}
           <JsonLd />
         </head>
-        <body suppressHydrationWarning className="bg-[#fafafa] dark:bg-[#080c14] text-slate-900 dark:text-slate-100 antialiased font-sans min-h-screen flex flex-col transition-colors duration-200">
+        <body suppressHydrationWarning className="bg-[#fafafa] text-slate-900 antialiased font-sans min-h-screen flex flex-col transition-colors duration-200">
           <QueryProvider>
             <ClientLayout>{children}</ClientLayout>
           </QueryProvider>

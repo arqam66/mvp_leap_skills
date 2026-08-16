@@ -16,21 +16,21 @@ export default function LoginPage() {
   }, [isLoaded, isSignedIn, router]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center px-4 py-12 text-slate-900 dark:text-slate-100">
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4 py-12 text-slate-900">
       <div className="w-full max-w-md">
         <button
           type="button"
           onClick={() => router.push('/')}
-          className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white mb-6 transition-colors cursor-pointer"
+          className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors cursor-pointer"
         >
           &larr; Back to Home
         </button>
 
         <div className="text-center mb-8">
-          <h1 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
+          <h1 className="font-headline text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 mb-2">
             Welcome back
           </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400">
+          <p className="text-sm text-slate-600">
             Sign in to continue to Leap Skills.
           </p>
         </div>
